@@ -1,0 +1,46 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: pgvector-db
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  php:
+    build: .
+    container_name: pgvector-php
+    env_file: .env
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      LLM_URL: ${LLM_URL}
+      LLM_API_KEY: ${LLM_API_KEY}
+      CHAT_MODEL: ${CHAT_MODEL}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: sleep infinity
+    depends_on:
+      - db
+
+  adminer:
+    image: adminer
+    container_name: pgvector-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
