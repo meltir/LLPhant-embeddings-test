@@ -6,67 +6,65 @@ namespace Tests\Unit\Chat;
 
 use App\Chat\ChatSession;
 use App\Chat\RagPipeline;
-use Monolog\Level;
 use Monolog\Logger as MonologLogger;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tests\Support\TestCase;
 
 class ChatSessionTest extends TestCase
 {
-    private MockObject&RagPipeline $ragPipeline;
-    private MockObject&OutputInterface $output;
-    private MockObject&LoggerInterface $logger;
-    private ChatSession $session;
 
-    protected function setUp(): void
+    public function testSessionIsInstanceOfCorrectClass(): void
     {
-        parent::setUp();
-
-        $this->ragPipeline = $this->createMock(RagPipeline::class);
-        $this->output = $this->createMock(OutputInterface::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
-
-        $this->session = new ChatSession(
-            $this->ragPipeline,
-            $this->output,
-            $this->logger
-        );
-    }
-
-    public function test_session_is_instance_of_correct_class(): void
-    {
-        $this->assertInstanceOf(ChatSession::class, $this->session);
-    }
-
-    public function test_session_constructor_parameters(): void
-    {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_run_method_exists(): void
+    public function testSessionConstructorParameters(): void
     {
-        $reflection = new \ReflectionClass($this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $this->assertInstanceOf(ChatSession::class, $session);
+    }
+
+    public function testRunMethodExists(): void
+    {
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $reflection = new \ReflectionClass($session);
         $this->assertTrue($reflection->hasMethod('run'));
     }
 
-    public function test_run_method_is_public(): void
+    public function testRunMethodIsPublic(): void
     {
-        $reflection = new \ReflectionClass($this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $reflection = new \ReflectionClass($session);
         $method = $reflection->getMethod('run');
         $this->assertTrue($method->isPublic());
     }
 
-    public function test_run_method_returns_void(): void
+    public function testRunMethodReturnsVoid(): void
     {
-        $reflection = new \ReflectionClass($this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $reflection = new \ReflectionClass($session);
         $method = $reflection->getMethod('run');
         $returnType = $method->getReturnType();
 
@@ -74,112 +72,113 @@ class ChatSessionTest extends TestCase
         $this->assertEquals('void', $returnType->getName());
     }
 
-    public function test_session_with_rag_pipeline(): void
+    public function testSessionWithRagPipeline(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_verbose_output(): void
+    public function testSessionWithVerboseOutput(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
-
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
         $output->method('getVerbosity')->willReturn(OutputInterface::VERBOSITY_VERBOSE);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_debug_output(): void
+    public function testSessionWithDebugOutput(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
-
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
         $output->method('getVerbosity')->willReturn(OutputInterface::VERBOSITY_DEBUG);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_quiet_output(): void
+    public function testSessionWithQuietOutput(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
-
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
         $output->method('getVerbosity')->willReturn(OutputInterface::VERBOSITY_QUIET);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_normal_output(): void
+    public function testSessionWithNormalOutput(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
-
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
         $output->method('getVerbosity')->willReturn(OutputInterface::VERBOSITY_NORMAL);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_monolog_logger(): void
+    public function testSessionWithMonologLogger(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
         $monologLogger = new MonologLogger('test');
 
         $session = new ChatSession($pipeline, $output, $monologLogger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_monolog_level(): void
+    public function testSessionWithMonologLevel(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
         $monologLogger = new MonologLogger('test');
 
         $session = new ChatSession($pipeline, $output, $monologLogger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_writes_prompt_to_output(): void
+    public function testSessionWritesPromptToOutput(): void
     {
-        // The session should write a welcome message when run() is called
-        // This requires mocking STDIN which is not easily testable
-        $this->assertInstanceOf(ChatSession::class, $this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_handles_quit_command(): void
+    public function testSessionHandlesQuitCommand(): void
     {
-        // The session should handle "quit" input and exit gracefully
-        $this->assertInstanceOf(ChatSession::class, $this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_handles_empty_input(): void
+    public function testSessionHandlesEmptyInput(): void
     {
-        $this->assertInstanceOf(ChatSession::class, $this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_pipeline_that_returns_answer(): void
+    public function testSessionWithPipelineThatReturnsAnswer(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
+        $pipeline = $this->createStub(RagPipeline::class);
         $pipeline->method('ask')->willReturn([
             'answer' => 'This is the answer.',
             'refinedQuery' => 'refined query',
@@ -187,17 +186,16 @@ class ChatSessionTest extends TestCase
             'context' => 'Context provided.',
         ]);
 
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_pipeline_that_returns_expanded_answer(): void
+    public function testSessionWithPipelineThatReturnsExpandedAnswer(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
+        $pipeline = $this->createStub(RagPipeline::class);
         $pipeline->method('ask')->willReturn([
             'answer' => 'Expanded answer.',
             'refinedQuery' => 'refined query',
@@ -205,82 +203,93 @@ class ChatSessionTest extends TestCase
             'context' => 'Expanded context.',
         ]);
 
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_unicode_question(): void
+    public function testSessionWithUnicodeQuestion(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_long_question(): void
+    public function testSessionWithLongQuestion(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_with_special_characters_question(): void
+    public function testSessionWithSpecialCharactersQuestion(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
-
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 
-    public function test_session_output_interface_type(): void
+    public function testSessionOutputInterfaceType(): void
     {
-        $reflection = new \ReflectionClass($this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $reflection = new \ReflectionClass($session);
         $property = $reflection->getProperty('output');
         $property->setAccessible(true);
 
-        $value = $property->getValue($this->session);
+        $value = $property->getValue($session);
         $this->assertInstanceOf(OutputInterface::class, $value);
     }
 
-    public function test_session_logger_interface_type(): void
+    public function testSessionLoggerInterfaceType(): void
     {
-        $reflection = new \ReflectionClass($this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $reflection = new \ReflectionClass($session);
         $property = $reflection->getProperty('logger');
         $property->setAccessible(true);
 
-        $value = $property->getValue($this->session);
+        $value = $property->getValue($session);
         $this->assertInstanceOf(LoggerInterface::class, $value);
     }
 
-    public function test_session_rag_pipeline_type(): void
+    public function testSessionRagPipelineType(): void
     {
-        $reflection = new \ReflectionClass($this->session);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $session = new ChatSession($pipeline, $output, $logger);
+        $reflection = new \ReflectionClass($session);
         $property = $reflection->getProperty('ragPipeline');
         $property->setAccessible(true);
 
-        $value = $property->getValue($this->session);
+        $value = $property->getValue($session);
         $this->assertInstanceOf(RagPipeline::class, $value);
     }
 
-    public function test_session_constructor_sets_all_properties(): void
+    public function testSessionConstructorSetsAllProperties(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
 
@@ -291,7 +300,7 @@ class ChatSessionTest extends TestCase
         $this->assertInstanceOf(LoggerInterface::class, $reflection->getProperty('logger')->getValue($session));
     }
 
-    public function test_session_with_different_output_verbosity_levels(): void
+    public function testSessionWithDifferentOutputVerbosityLevels(): void
     {
         $levels = [
             OutputInterface::VERBOSITY_NORMAL,
@@ -302,10 +311,10 @@ class ChatSessionTest extends TestCase
         ];
 
         foreach ($levels as $level) {
-            $pipeline = $this->createMock(RagPipeline::class);
-            $output = $this->createMock(OutputInterface::class);
+            $pipeline = $this->createStub(RagPipeline::class);
+            $output = $this->createStub(OutputInterface::class);
             $output->method('getVerbosity')->willReturn($level);
-            $logger = $this->createMock(LoggerInterface::class);
+            $logger = $this->createStub(LoggerInterface::class);
 
             $session = new ChatSession($pipeline, $output, $logger);
 
@@ -313,15 +322,14 @@ class ChatSessionTest extends TestCase
         }
     }
 
-    public function test_session_with_null_safe_operations(): void
+    public function testSessionWithNullSafeOperations(): void
     {
-        $pipeline = $this->createMock(RagPipeline::class);
-        $output = $this->createMock(OutputInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $pipeline = $this->createStub(RagPipeline::class);
+        $output = $this->createStub(OutputInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $session = new ChatSession($pipeline, $output, $logger);
 
-        // Session should handle operations safely
         $this->assertInstanceOf(ChatSession::class, $session);
     }
 }

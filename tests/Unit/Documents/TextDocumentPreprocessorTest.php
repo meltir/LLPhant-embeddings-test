@@ -18,12 +18,12 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->preprocessor = new TextDocumentPreprocessor();
     }
 
-    public function test_preprocessor_is_instance_of_correct_class(): void
+    public function testPreprocessorIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(TextDocumentPreprocessor::class, $this->preprocessor);
     }
 
-    public function test_preprocess_sets_title(): void
+    public function testPreprocessSetsTitle(): void
     {
         $doc = new Document();
         $doc->content = 'Some content here.';
@@ -35,7 +35,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals($title, $result->sourceName);
     }
 
-    public function test_preprocess_removes_footer_pattern(): void
+    public function testPreprocessRemovesFooterPattern(): void
     {
         $content = "This is the main content.\n\n----------\n\nThis text comes from the collection of Sherlock Holmes stories.";
         $doc = new Document();
@@ -48,7 +48,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertStringContainsString('This is the main content.', $result->content);
     }
 
-    public function test_preprocess_collapses_triple_newlines(): void
+    public function testPreprocessCollapsesTripleNewlines(): void
     {
         $content = "Line one.\n\n\n\n\nLine two.\n\n\nLine three.";
         $doc = new Document();
@@ -60,7 +60,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertStringContainsString("Line one.\n\nLine two.\n\nLine three.", $result->content);
     }
 
-    public function test_preprocess_trims_whitespace(): void
+    public function testPreprocessTrimsWhitespace(): void
     {
         $content = "   Content with whitespace   \n\n";
         $doc = new Document();
@@ -71,7 +71,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals('Content with whitespace', $result->content);
     }
 
-    public function test_preprocess_handles_empty_content(): void
+    public function testPreprocessHandlesEmptyContent(): void
     {
         $doc = new Document();
         $doc->content = '';
@@ -82,7 +82,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals('Empty Story', $result->sourceName);
     }
 
-    public function test_preprocess_handles_whitespace_only_content(): void
+    public function testPreprocessHandlesWhitespaceOnlyContent(): void
     {
         $doc = new Document();
         $doc->content = "   \n\n   \n";
@@ -92,7 +92,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals('', trim($result->content));
     }
 
-    public function test_preprocess_handles_content_without_footer(): void
+    public function testPreprocessHandlesContentWithoutFooter(): void
     {
         $content = "Just regular content without any footer.";
         $doc = new Document();
@@ -103,7 +103,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals($content, $result->content);
     }
 
-    public function test_preprocess_preserves_single_newlines(): void
+    public function testPreprocessPreservesSingleNewlines(): void
     {
         $content = "Line one.\nLine two.\nLine three.";
         $doc = new Document();
@@ -114,7 +114,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals($content, $result->content);
     }
 
-    public function test_preprocess_preserves_double_newlines(): void
+    public function testPreprocessPreservesDoubleNewlines(): void
     {
         $content = "Paragraph one.\n\nParagraph two.";
         $doc = new Document();
@@ -125,7 +125,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals($content, $result->content);
     }
 
-    public function test_preprocess_handles_complex_footer(): void
+    public function testPreprocessHandlesComplexFooter(): void
     {
         $content = "The End.\n\n----------\n\nAnd other tales.\n\nThis text comes from the collection\nof wonderful stories by Arthur Conan Doyle.";
         $doc = new Document();
@@ -137,7 +137,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertStringContainsString('The End.', $result->content);
     }
 
-    public function test_preprocess_handles_content_with_only_dashes(): void
+    public function testPreprocessHandlesContentWithOnlyDashes(): void
     {
         $content = "Content before.\n----------\nThis text comes from the collection.";
         $doc = new Document();
@@ -150,7 +150,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertStringContainsString('Content before.', $result->content);
     }
 
-    public function test_preprocess_returns_same_document_instance(): void
+    public function testPreprocessReturnsSameDocumentInstance(): void
     {
         $doc = new Document();
         $doc->content = 'Test content.';
@@ -160,7 +160,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertSame($doc, $result);
     }
 
-    public function test_preprocess_handles_unicode_content(): void
+    public function testPreprocessHandlesUnicodeContent(): void
     {
         $content = "Café résumé naïve. \n\n----------\n\nThis text comes from the collection.";
         $doc = new Document();
@@ -172,7 +172,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertStringNotContainsString('This text comes from the collection', $result->content);
     }
 
-    public function test_preprocess_handles_special_characters(): void
+    public function testPreprocessHandlesSpecialCharacters(): void
     {
         $content = "Special chars: @#\$%^&*()!\n\n----------\n\nThis text comes from the collection.";
         $doc = new Document();
@@ -184,7 +184,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertStringNotContainsString('This text comes from the collection', $result->content);
     }
 
-    public function test_preprocess_handles_long_content(): void
+    public function testPreprocessHandlesLongContent(): void
     {
         $longContent = str_repeat('This is a test sentence. ', 100);
         $doc = new Document();
@@ -196,7 +196,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals('Long Story', $result->sourceName);
     }
 
-public function test_preprocess_handles_content_with_mixed_whitespace(): void
+public function testPreprocessHandlesContentWithMixedWhitespace(): void
     {
         $content = "   Content with tabs\t\tand spaces   \n\n   \n\nMore content   ";
         $doc = new Document();
@@ -209,7 +209,7 @@ public function test_preprocess_handles_content_with_mixed_whitespace(): void
         $this->assertEquals('Mixed Whitespace', $result->sourceName);
     }
 
-    public function test_preprocess_handles_title_with_special_chars(): void
+    public function testPreprocessHandlesTitleWithSpecialChars(): void
     {
         $doc = new Document();
         $doc->content = 'Some content.';
@@ -221,7 +221,7 @@ public function test_preprocess_handles_content_with_mixed_whitespace(): void
         $this->assertEquals($title, $result->sourceName);
     }
 
-    public function test_preprocess_handles_empty_title(): void
+    public function testPreprocessHandlesEmptyTitle(): void
     {
         $doc = new Document();
         $doc->content = 'Some content.';

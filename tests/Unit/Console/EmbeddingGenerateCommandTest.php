@@ -24,92 +24,92 @@ class EmbeddingGenerateCommandTest extends TestCase
         $this->tester = new CommandTester($this->command);
     }
 
-    public function test_command_is_instance_of_correct_class(): void
+    public function testCommandIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(EmbeddingGenerateCommand::class, $this->command);
     }
 
-    public function test_command_extends_base_command(): void
+    public function testCommandExtendsBaseCommand(): void
     {
         $this->assertInstanceOf(Command::class, $this->command);
     }
 
-    public function test_command_has_correct_name(): void
+    public function testCommandHasCorrectName(): void
     {
         $this->assertEquals('app:embeddings:generate', $this->command->getName());
     }
 
-    public function test_command_has_description(): void
+    public function testCommandHasDescription(): void
     {
         $this->assertNotEmpty($this->command->getDescription());
     }
 
-    public function test_command_has_text_dir_option(): void
+    public function testCommandHasTextDirOption(): void
     {
         $definition = $this->command->getDefinition();
         $this->assertTrue($definition->hasOption('text-dir'));
     }
 
-    public function test_command_has_max_length_option(): void
+    public function testCommandHasMaxLengthOption(): void
     {
         $definition = $this->command->getDefinition();
         $this->assertTrue($definition->hasOption('max-length'));
     }
 
-    public function test_command_has_separator_option(): void
+    public function testCommandHasSeparatorOption(): void
     {
         $definition = $this->command->getDefinition();
         $this->assertTrue($definition->hasOption('separator'));
     }
 
-    public function test_command_has_word_overlap_option(): void
+    public function testCommandHasWordOverlapOption(): void
     {
         $definition = $this->command->getDefinition();
         $this->assertTrue($definition->hasOption('word-overlap'));
     }
 
-    public function test_command_has_embedding_generator_option(): void
+    public function testCommandHasEmbeddingGeneratorOption(): void
     {
         $definition = $this->command->getDefinition();
         $this->assertTrue($definition->hasOption('embedding-generator'));
     }
 
-    public function test_command_text_dir_default(): void
+    public function testCommandTextDirDefault(): void
     {
         $definition = $this->command->getDefinition();
         $option = $definition->getOption('text-dir');
         $this->assertStringContainsString('text', $option->getDefault());
     }
 
-    public function test_command_max_length_default(): void
+    public function testCommandMaxLengthDefault(): void
     {
         $definition = $this->command->getDefinition();
         $option = $definition->getOption('max-length');
         $this->assertEquals('200', $option->getDefault());
     }
 
-    public function test_command_separator_default(): void
+    public function testCommandSeparatorDefault(): void
     {
         $definition = $this->command->getDefinition();
         $option = $definition->getOption('separator');
         $this->assertEquals('.', $option->getDefault());
     }
 
-    public function test_command_word_overlap_default(): void
+    public function testCommandWordOverlapDefault(): void
     {
         $definition = $this->command->getDefinition();
         $option = $definition->getOption('word-overlap');
         $this->assertEquals('10', $option->getDefault());
     }
 
-  public function test_command_embedding_generator_default(): void
+  public function testCommandEmbeddingGeneratorDefault(): void
     {
         $definition = $this->command->getDefinition();
         $option = $definition->getOption('embedding-generator');
         $this->assertStringContainsString('EmbeddingGemmaEmbeddingGenerator', $option->getDefault());
     }
 
-    public function test_command_help(): void
+    public function testCommandHelp(): void
     {
         $application = new \Symfony\Component\Console\Application();
         $application->addCommand($this->command);
@@ -126,7 +126,7 @@ class EmbeddingGenerateCommandTest extends TestCase
         $this->assertNotNull($definition->getOption('embedding-generator'));
     }
 
-    public function test_command_list_options(): void
+    public function testCommandListOptions(): void
     {
         $application = new Application();
         $application->addCommand($this->command);
@@ -138,25 +138,25 @@ class EmbeddingGenerateCommandTest extends TestCase
         $this->assertStringContainsString('app:embeddings:generate', $output);
     }
 
-    public function test_command_is_configured(): void
+    public function testCommandIsConfigured(): void
     {
         $reflection = new \ReflectionClass($this->command);
         $this->assertTrue($reflection->hasMethod('configure'));
     }
 
-    public function test_command_execute_method_exists(): void
+    public function testCommandExecuteMethodExists(): void
     {
         $reflection = new \ReflectionClass($this->command);
         $this->assertTrue($reflection->hasMethod('execute'));
     }
 
-    public function test_command_configure_method_exists(): void
+    public function testCommandConfigureMethodExists(): void
     {
         $reflection = new \ReflectionClass($this->command);
         $this->assertTrue($reflection->hasMethod('configure'));
     }
 
-    public function test_command_execute_returns_int(): void
+    public function testCommandExecuteReturnsInt(): void
     {
         $reflection = new \ReflectionClass($this->command);
         $method = $reflection->getMethod('execute');
@@ -165,7 +165,7 @@ class EmbeddingGenerateCommandTest extends TestCase
         $this->assertEquals('int', (string) $returnType);
     }
 
-    public function test_command_with_all_options(): void
+    public function testCommandWithAllOptions(): void
     {
         try {
             $this->tester->execute([

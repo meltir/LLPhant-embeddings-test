@@ -21,12 +21,12 @@ class ContextAssessorTest extends TestCase
         $this->assessor = new ContextAssessor($chatClient);
     }
 
-    public function test_assessor_is_instance_of_correct_class(): void
+    public function testAssessorIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(ContextAssessor::class, $this->assessor);
     }
 
-    public function test_assess_returns_enough(): void
+    public function testAssessReturnsEnough(): void
     {
         $question = 'Who is the murderer?';
         $context = 'Dr. Roylott was found with the murder weapon.';
@@ -40,7 +40,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('ENOUGH', $result);
     }
 
-    public function test_assess_returns_not_enough(): void
+    public function testAssessReturnsNotEnough(): void
     {
         $question = 'Who is the murderer?';
         $context = 'A crime occurred.';
@@ -54,7 +54,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('NOT_ENOUGH', $result);
     }
 
-    public function test_assess_with_english_response(): void
+    public function testAssessWithEnglishResponse(): void
     {
         $question = 'What happened?';
         $context = 'Relevant information is present in the text.';
@@ -68,7 +68,7 @@ class ContextAssessorTest extends TestCase
         $this->assertContains($result, ['ENOUGH', 'NOT_ENOUGH']);
     }
 
-    public function test_assess_with_empty_question(): void
+    public function testAssessWithEmptyQuestion(): void
     {
         $context = 'Some context is provided.';
 
@@ -81,7 +81,7 @@ class ContextAssessorTest extends TestCase
         $this->assertIsString($result);
     }
 
-    public function test_assess_with_empty_context(): void
+    public function testAssessWithEmptyContext(): void
     {
         $question = 'What is the answer?';
 
@@ -94,7 +94,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('NOT_ENOUGH', $result);
     }
 
-    public function test_assess_with_long_context(): void
+    public function testAssessWithLongContext(): void
     {
         $question = 'What happened?';
         $longContext = str_repeat('Relevant passage from the story. ', 200);
@@ -108,7 +108,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('ENOUGH', $result);
     }
 
-    public function test_assess_with_long_question(): void
+    public function testAssessWithLongQuestion(): void
     {
         $question = str_repeat('What is the details about ', 50) . '?';
         $context = 'The relevant information is here in this passage.';
@@ -122,7 +122,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('ENOUGH', $result);
     }
 
-    public function test_assess_with_unicode_content(): void
+    public function testAssessWithUnicodeContent(): void
     {
         $question = 'Who is the antagonist?';
         $context = 'Dr. Grimesby Roylott is the villain in The Adventure of the Speckled Band.';
@@ -136,7 +136,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('ENOUGH', $result);
     }
 
-    public function test_assess_returns_uppercase_string(): void
+    public function testAssessReturnsUppercaseString(): void
     {
         $fake = new ClientFake([$this->createChatResponse('ENOUGH')]);
         $chatClient = new LlmChatClient($fake, 'test-model');
@@ -147,12 +147,12 @@ class ContextAssessorTest extends TestCase
         $this->assertTrue(in_array($result, ['ENOUGH', 'NOT_ENOUGH'], true));
     }
 
-    public function test_assessor_implements_interface(): void
+    public function testAssessorImplementsInterface(): void
     {
         $this->assertInstanceOf(\App\Interfaces\IContextAssessor::class, $this->assessor);
     }
 
-    public function test_assess_with_multiline_context(): void
+    public function testAssessWithMultilineContext(): void
     {
         $question = 'What is the conclusion?';
         $context = "Passage one from the story.\n\nPassage two with more details.\n\nFinal passage with the answer.";
@@ -166,7 +166,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('ENOUGH', $result);
     }
 
-    public function test_assess_with_sherlock_holmes_question(): void
+    public function testAssessWithSherlockHolmesQuestion(): void
     {
         $question = 'How did Sherlock Holmes solve the case?';
         $context = 'Holmes used deductive reasoning and observed small details that others missed.';
@@ -180,7 +180,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('ENOUGH', $result);
     }
 
-    public function test_assess_with_multiple_questions(): void
+    public function testAssessWithMultipleQuestions(): void
     {
         $fake = new ClientFake([
             $this->createChatResponse('ENOUGH'),
@@ -199,7 +199,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('ENOUGH', $result3);
     }
 
-    public function test_assess_with_special_characters(): void
+    public function testAssessWithSpecialCharacters(): void
     {
         $question = 'What does @#\$%^&* mean?';
         $context = 'The symbols are clues left at the scene.';
@@ -213,7 +213,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('NOT_ENOUGH', $result);
     }
 
-    public function test_assess_with_number_context(): void
+    public function testAssessWithNumberContext(): void
     {
         $question = 'What number is mentioned?';
         $context = 'The number 42 appears three times in the passage.';
@@ -227,7 +227,7 @@ class ContextAssessorTest extends TestCase
         $this->assertEquals('ENOUGH', $result);
     }
 
-    public function test_assess_with_json_context(): void
+    public function testAssessWithJsonContext(): void
     {
         $question = 'What is in the JSON?';
         $context = '{"clue": "mud", "location": "garden", "time": "midnight"}';

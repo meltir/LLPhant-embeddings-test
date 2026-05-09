@@ -12,28 +12,28 @@ use Tests\Support\TestCase;
 
 class EmbeddingGemmaEmbeddingGeneratorTest extends TestCase
 {
-    public function test_generator_is_instance_of_correct_class(): void
+    public function testGeneratorIsInstanceOfCorrectClass(): void
     {
         $generator = new EmbeddingGemmaEmbeddingGenerator();
 
         $this->assertInstanceOf(EmbeddingGemmaEmbeddingGenerator::class, $generator);
     }
 
-    public function test_get_embedding_length_returns_768(): void
+    public function testGetEmbeddingLengthReturns768(): void
     {
         $generator = new EmbeddingGemmaEmbeddingGenerator();
 
         $this->assertEquals(768, $generator->getEmbeddingLength());
     }
 
-    public function test_get_model_name_returns_correct_model(): void
+    public function testGetModelNameReturnsCorrectModel(): void
     {
         $generator = new EmbeddingGemmaEmbeddingGenerator();
 
         $this->assertEquals('unsloth/embeddinggemma-300m-GGUF:Q4_0', $generator->getModelName());
     }
 
-    public function test_embed_document_with_fake_client(): void
+    public function testEmbedDocumentWithFakeClient(): void
     {
         $embeddingVector = $this->makeEmbeddingVector(768);
         $fake = new ClientFake([
@@ -53,7 +53,7 @@ class EmbeddingGemmaEmbeddingGeneratorTest extends TestCase
         $this->assertCount(768, $doc->embedding);
     }
 
-    public function test_embed_text_with_fake_client(): void
+    public function testEmbedTextWithFakeClient(): void
     {
         $embeddingVector = $this->makeEmbeddingVector(768);
         $fake = new ClientFake([
@@ -68,7 +68,7 @@ class EmbeddingGemmaEmbeddingGeneratorTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_text_different_texts_produce_different_vectors(): void
+    public function testEmbedTextDifferentTextsProduceDifferentVectors(): void
     {
         $vector1 = $this->makeEmbeddingVectorForText('Hello world');
         $vector2 = $this->makeEmbeddingVectorForText('Goodbye world');
@@ -76,7 +76,7 @@ class EmbeddingGemmaEmbeddingGeneratorTest extends TestCase
         $this->assertNotEquals($vector1, $vector2);
     }
 
-    public function test_embed_document_preserves_document_properties(): void
+    public function testEmbedDocumentPreservesDocumentProperties(): void
     {
         $embeddingVector = $this->makeEmbeddingVector(768);
         $fake = new ClientFake([
@@ -98,7 +98,7 @@ class EmbeddingGemmaEmbeddingGeneratorTest extends TestCase
         $this->assertNotNull($doc->embedding);
     }
 
-    public function test_get_embedding_length_is_consistent(): void
+    public function testGetEmbeddingLengthIsConsistent(): void
     {
         $generator1 = new EmbeddingGemmaEmbeddingGenerator();
         $generator2 = new EmbeddingGemmaEmbeddingGenerator();

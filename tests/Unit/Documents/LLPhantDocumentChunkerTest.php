@@ -19,12 +19,12 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->chunker = new LLPhantDocumentChunker();
     }
 
-    public function test_chunker_is_instance_of_correct_class(): void
+    public function testChunkerIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(LLPhantDocumentChunker::class, $this->chunker);
     }
 
-    public function test_chunker_chunks_document(): void
+    public function testChunkerChunksDocument(): void
     {
         $doc = new Document();
         $doc->content = "This is a test document. It has multiple sentences. Each sentence is a separate thought. We need enough text to create chunks. The chunker should split this into multiple parts. Each part should be a reasonable size for processing.";
@@ -41,7 +41,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         }
     }
 
-    public function test_chunker_respects_max_length(): void
+    public function testChunkerRespectsMaxLength(): void
     {
         $doc = new Document();
         $doc->content = "First sentence. Second sentence. Third sentence. Fourth sentence. Fifth sentence.";
@@ -52,7 +52,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->assertGreaterThan(0, count($chunks));
     }
 
-    public function test_chunker_uses_separator(): void
+    public function testChunkerUsesSeparator(): void
     {
         $doc = new Document();
         $doc->content = "First paragraph. Second paragraph. Third paragraph.";
@@ -63,7 +63,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->assertGreaterThan(0, count($chunks));
     }
 
-    public function test_chunker_with_word_overlap(): void
+    public function testChunkerWithWordOverlap(): void
     {
         $doc = new Document();
         $doc->content = "Word one. Word two. Word three. Word four. Word five. Word six. Word seven. Word eight.";
@@ -74,7 +74,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->assertGreaterThan(0, count($chunks));
     }
 
-    public function test_chunker_returns_empty_array_for_empty_content(): void
+    public function testChunkerReturnsEmptyArrayForEmptyContent(): void
     {
         $doc = new Document();
         $doc->content = '';
@@ -84,7 +84,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->assertIsArray($chunks);
     }
 
-    public function test_chunker_returns_empty_array_for_whitespace_content(): void
+    public function testChunkerReturnsEmptyArrayForWhitespaceContent(): void
     {
         $doc = new Document();
         $doc->content = "   \n\n   ";
@@ -94,7 +94,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->assertIsArray($chunks);
     }
 
-    public function test_chunker_single_chunk_for_short_content(): void
+    public function testChunkerSingleChunkForShortContent(): void
     {
         $doc = new Document();
         $doc->content = "Short.";
@@ -104,7 +104,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->assertCount(1, $chunks);
     }
 
-    public function test_chunker_sets_chunk_numbers(): void
+    public function testChunkerSetsChunkNumbers(): void
     {
         $doc = new Document();
         $doc->content = "First sentence. Second sentence. Third sentence. Fourth sentence. Fifth sentence.";
@@ -117,7 +117,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->assertEquals(range(0, count($chunks) - 1), $chunkNumbers);
     }
 
-public function test_chunker_preserves_source_name(): void
+public function testChunkerPreservesSourceName(): void
     {
         $doc = new Document();
         $doc->content = "Sentence one. Sentence two.";
@@ -130,7 +130,7 @@ public function test_chunker_preserves_source_name(): void
         }
     }
 
-    public function test_chunker_with_large_max_length(): void
+    public function testChunkerWithLargeMaxLength(): void
     {
         $doc = new Document();
         $doc->content = "One sentence.";
@@ -141,7 +141,7 @@ public function test_chunker_preserves_source_name(): void
         $this->assertEquals("One sentence.", $chunks[0]->content);
     }
 
-    public function test_chunker_with_zero_word_overlap(): void
+    public function testChunkerWithZeroWordOverlap(): void
     {
         $doc = new Document();
         $doc->content = "First. Second. Third. Fourth.";
@@ -152,7 +152,7 @@ public function test_chunker_preserves_source_name(): void
         $this->assertGreaterThan(0, count($chunks));
     }
 
-    public function test_chunker_with_different_separator(): void
+    public function testChunkerWithDifferentSeparator(): void
     {
         $doc = new Document();
         $doc->content = "First; Second; Third; Fourth.";
@@ -162,7 +162,7 @@ public function test_chunker_preserves_source_name(): void
         $this->assertIsArray($chunks);
     }
 
-    public function test_chunker_handles_long_paragraph(): void
+    public function testChunkerHandlesLongParagraph(): void
     {
         $longContent = str_repeat('This is a test sentence with multiple words. ', 50);
         $doc = new Document();
@@ -178,7 +178,7 @@ public function test_chunker_preserves_source_name(): void
         }
     }
 
-    public function test_chunker_content_does_not_contain_null_bytes(): void
+    public function testChunkerContentDoesNotContainNullBytes(): void
     {
         $doc = new Document();
         $doc->content = "Normal content. More content.";
@@ -190,7 +190,7 @@ public function test_chunker_preserves_source_name(): void
         }
     }
 
-    public function test_chunker_returns_documents_with_source_name(): void
+    public function testChunkerReturnsDocumentsWithSourceName(): void
     {
         $doc = new Document();
         $doc->content = "Sentence one. Sentence two.";

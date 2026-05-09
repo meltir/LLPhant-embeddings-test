@@ -14,35 +14,35 @@ use Tests\Support\TestCase;
 
 class RagApplicationTest extends TestCase
 {
-    public function test_application_is_instance_of_correct_class(): void
+    public function testApplicationIsInstanceOfCorrectClass(): void
     {
         $app = new RagApplication();
 
         $this->assertInstanceOf(RagApplication::class, $app);
     }
 
-    public function test_application_extends_console_application(): void
+    public function testApplicationExtendsConsoleApplication(): void
     {
         $app = new RagApplication();
 
         $this->assertInstanceOf(\Symfony\Component\Console\Application::class, $app);
     }
 
-    public function test_application_has_name(): void
+    public function testApplicationHasName(): void
     {
         $app = new RagApplication();
 
         $this->assertNotEmpty($app->getName());
     }
 
-    public function test_application_has_version(): void
+    public function testApplicationHasVersion(): void
     {
         $app = new RagApplication();
 
         $this->assertNotEmpty($app->getVersion());
     }
 
-    public function test_application_registers_embedding_command(): void
+    public function testApplicationRegistersEmbeddingCommand(): void
     {
         $app = new RagApplication();
         $commands = $app->all();
@@ -57,7 +57,7 @@ class RagApplicationTest extends TestCase
         $this->assertTrue($found);
     }
 
-    public function test_application_registers_chat_command(): void
+    public function testApplicationRegistersChatCommand(): void
     {
         $app = new RagApplication();
         $commands = $app->all();
@@ -72,7 +72,7 @@ class RagApplicationTest extends TestCase
         $this->assertTrue($found);
     }
 
-    public function test_application_embedding_command_is_correct_type(): void
+    public function testApplicationEmbeddingCommandIsCorrectType(): void
     {
         $app = new RagApplication();
         $cmd = $app->get('app:embeddings:generate');
@@ -80,7 +80,7 @@ class RagApplicationTest extends TestCase
         $this->assertInstanceOf(EmbeddingGenerateCommand::class, $cmd);
     }
 
-    public function test_application_chat_command_is_correct_type(): void
+    public function testApplicationChatCommandIsCorrectType(): void
     {
         $app = new RagApplication();
         $cmd = $app->get('app:chat');
@@ -88,14 +88,14 @@ class RagApplicationTest extends TestCase
         $this->assertInstanceOf(ChatCommand::class, $cmd);
     }
 
-    public function test_application_runs(): void
+    public function testApplicationRuns(): void
     {
         $app = new RagApplication();
 
         $this->assertInstanceOf(RagApplication::class, $app);
     }
 
-    public function test_application_has_both_commands(): void
+    public function testApplicationHasBothCommands(): void
     {
         $app = new RagApplication();
         $commands = $app->all();
@@ -106,7 +106,7 @@ class RagApplicationTest extends TestCase
         ]));
     }
 
-    public function test_application_embedding_command_name(): void
+    public function testApplicationEmbeddingCommandName(): void
     {
         $app = new RagApplication();
         $embeddingCmd = $app->get('app:embeddings:generate');
@@ -114,7 +114,7 @@ class RagApplicationTest extends TestCase
         $this->assertEquals('app:embeddings:generate', $embeddingCmd->getName());
     }
 
-    public function test_application_chat_command_name(): void
+    public function testApplicationChatCommandName(): void
     {
         $app = new RagApplication();
         $chatCmd = $app->get('app:chat');
@@ -122,7 +122,7 @@ class RagApplicationTest extends TestCase
         $this->assertEquals('app:chat', $chatCmd->getName());
     }
 
-    public function test_application_description(): void
+    public function testApplicationDescription(): void
     {
         $app = new RagApplication();
         $embeddingCmd = $app->get('app:embeddings:generate');
@@ -130,21 +130,21 @@ class RagApplicationTest extends TestCase
         $this->assertNotEmpty($embeddingCmd->getDescription());
     }
 
-    public function test_application_version_is_string(): void
+    public function testApplicationVersionIsString(): void
     {
         $app = new RagApplication();
 
         $this->assertIsString($app->getVersion());
     }
 
-    public function test_application_name_is_string(): void
+    public function testApplicationNameIsString(): void
     {
         $app = new RagApplication();
 
         $this->assertIsString($app->getName());
     }
 
-    public function test_application_can_find_commands(): void
+    public function testApplicationCanFindCommands(): void
     {
         $app = new RagApplication();
 
@@ -155,7 +155,7 @@ class RagApplicationTest extends TestCase
         $this->assertInstanceOf(ChatCommand::class, $chatCmd);
     }
 
-    public function test_application_all_commands(): void
+    public function testApplicationAllCommands(): void
     {
         $app = new RagApplication();
         $commands = $app->all();
@@ -164,7 +164,7 @@ class RagApplicationTest extends TestCase
         $this->assertGreaterThan(0, count($commands));
     }
 
-    public function test_application_default_command(): void
+    public function testApplicationDefaultCommand(): void
     {
         $app = new RagApplication();
 
@@ -173,7 +173,7 @@ class RagApplicationTest extends TestCase
         $this->assertEquals('1.0.0', $app->getVersion());
     }
 
-    public function test_application_with_long_name(): void
+    public function testApplicationWithLongName(): void
     {
         $app = new RagApplication();
 
@@ -181,7 +181,7 @@ class RagApplicationTest extends TestCase
         $this->assertGreaterThan(0, strlen($app->getName()));
     }
 
-    public function test_application_with_version_number(): void
+    public function testApplicationWithVersionNumber(): void
     {
         $app = new RagApplication();
 

@@ -22,12 +22,12 @@ class AnswerGeneratorTest extends TestCase
         $this->generator = new AnswerGenerator($chatClient);
     }
 
-    public function test_generator_is_instance_of_correct_class(): void
+    public function testGeneratorIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(AnswerGenerator::class, $this->generator);
     }
 
-    public function test_generate_returns_answer(): void
+    public function testGenerateReturnsAnswer(): void
     {
         $question = 'Who committed the crime?';
         $context = 'Dr. Roylott was seen near the scene.';
@@ -38,7 +38,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertNotEmpty($answer);
     }
 
-    public function test_generate_with_specific_response(): void
+    public function testGenerateWithSpecificResponse(): void
     {
         $expectedAnswer = 'Based on the evidence, Sherlock Holmes deduced that the speckled band was a venomous snake used by Dr. Roylott.';
         $fake = new ClientFake([$this->createChatResponse($expectedAnswer)]);
@@ -50,7 +50,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_with_empty_question(): void
+    public function testGenerateWithEmptyQuestion(): void
     {
         $context = 'Some context provided.';
         $expectedAnswer = 'An answer to nothing.';
@@ -64,7 +64,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_with_empty_context(): void
+    public function testGenerateWithEmptyContext(): void
     {
         $question = 'What happened?';
         $expectedAnswer = 'No context available.';
@@ -78,7 +78,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_with_long_question(): void
+    public function testGenerateWithLongQuestion(): void
     {
         $longQuestion = str_repeat('What is the meaning of ', 50) . '?';
         $context = 'Short context.';
@@ -93,7 +93,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_with_long_context(): void
+    public function testGenerateWithLongContext(): void
     {
         $question = 'What happened?';
         $longContext = str_repeat('Passage from the story. ', 200);
@@ -108,7 +108,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_with_unicode_content(): void
+    public function testGenerateWithUnicodeContent(): void
     {
         $question = 'Who is the villain?';
         $context = 'Dr. Grimesby Roylott is the antagonist in The Adventure of the Speckled Band.';
@@ -123,7 +123,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_with_multiline_context(): void
+    public function testGenerateWithMultilineContext(): void
     {
         $question = 'What is the answer?';
         $context = "Passage one.\n\nPassage two.\n\nPassage three.";
@@ -138,7 +138,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_returns_plain_text(): void
+    public function testGenerateReturnsPlainText(): void
     {
         $expectedAnswer = 'Simple plain text answer without any formatting.';
         $fake = new ClientFake([$this->createChatResponse($expectedAnswer)]);
@@ -151,7 +151,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertStringNotContainsString('chatcmpl', $answer);
     }
 
-    public function test_generate_with_sherlock_holmes_context(): void
+    public function testGenerateWithSherlockHolmesContext(): void
     {
         $question = 'How did Watson die?';
         $context = 'In the stories, Watson does not die. He survives all adventures.';
@@ -166,7 +166,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_with_number_answer(): void
+    public function testGenerateWithNumberAnswer(): void
     {
         $expectedAnswer = '42';
         $fake = new ClientFake([$this->createChatResponse($expectedAnswer)]);
@@ -178,7 +178,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals('42', $answer);
     }
 
-    public function test_generate_with_json_answer(): void
+    public function testGenerateWithJsonAnswer(): void
     {
         $expectedAnswer = '{"deduction": "butler", "confidence": 0.95}';
         $fake = new ClientFake([$this->createChatResponse($expectedAnswer)]);
@@ -190,12 +190,12 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generator_implements_interface(): void
+    public function testGeneratorImplementsInterface(): void
     {
         $this->assertInstanceOf(\App\Interfaces\IAnswerGenerator::class, $this->generator);
     }
 
-    public function test_generate_with_special_characters_in_context(): void
+    public function testGenerateWithSpecialCharactersInContext(): void
     {
         $question = 'What does the symbol mean?';
         $context = 'The symbol @#\$%^&*() appeared at the scene.';
@@ -210,7 +210,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals($expectedAnswer, $answer);
     }
 
-    public function test_generate_with_whitespace_answer(): void
+    public function testGenerateWithWhitespaceAnswer(): void
     {
         $expectedAnswer = '   ';
         $fake = new ClientFake([$this->createChatResponse($expectedAnswer)]);
@@ -222,7 +222,7 @@ class AnswerGeneratorTest extends TestCase
         $this->assertEquals('   ', $answer);
     }
 
-    public function test_generate_preserves_answer_case(): void
+    public function testGeneratePreservesAnswerCase(): void
     {
         $expectedAnswer = 'SHERLOCK HOLMES SOLVED THE CASE.';
         $fake = new ClientFake([$this->createChatResponse($expectedAnswer)]);

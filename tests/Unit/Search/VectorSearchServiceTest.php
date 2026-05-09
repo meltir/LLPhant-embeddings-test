@@ -16,7 +16,7 @@ class VectorSearchServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
         $this->service = new VectorSearchService($this->entityManager, \App\Entity\Chunk::class);
     }
 
@@ -167,7 +167,7 @@ class VectorSearchServiceTest extends TestCase
 
     public function test_service_with_different_entity_class(): void
     {
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
         $service = new VectorSearchService($entityManager, 'SomeOtherClass');
 
         $this->assertInstanceOf(VectorSearchService::class, $service);
@@ -212,7 +212,7 @@ class VectorSearchServiceTest extends TestCase
 
     public function test_service_constructor_parameters(): void
     {
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
         $service = new VectorSearchService($entityManager, \App\Entity\Chunk::class);
 
         $this->assertInstanceOf(VectorSearchService::class, $service);
@@ -220,7 +220,7 @@ class VectorSearchServiceTest extends TestCase
 
     public function test_service_with_null_entity_class(): void
     {
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $this->expectException(\TypeError::class);
         new VectorSearchService($entityManager, null);
@@ -228,7 +228,7 @@ class VectorSearchServiceTest extends TestCase
 
     public function test_service_with_empty_entity_class(): void
     {
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $service = new VectorSearchService($entityManager, '');
         $this->assertInstanceOf(VectorSearchService::class, $service);

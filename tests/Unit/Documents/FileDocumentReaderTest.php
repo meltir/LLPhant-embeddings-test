@@ -44,12 +44,12 @@ class FileDocumentReaderTest extends TestCase
         rmdir($dir);
     }
 
-    public function test_reader_is_instance_of_correct_class(): void
+    public function testReaderIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(FileDocumentReader::class, $this->reader);
     }
 
-    public function test_reader_reads_text_files_from_directory(): void
+    public function testReaderReadsTextFilesFromDirectory(): void
     {
         file_put_contents($this->tempDir . '/story1.txt', "The Adventure of Test One\n\nThis is the content of story one.");
         file_put_contents($this->tempDir . '/story2.txt', "The Adventure of Test Two\n\nThis is the content of story two.");
@@ -63,7 +63,7 @@ class FileDocumentReaderTest extends TestCase
         }
     }
 
-    public function test_reader_returns_empty_array_for_empty_directory(): void
+    public function testReaderReturnsEmptyArrayForEmptyDirectory(): void
     {
         $documents = $this->reader->read($this->tempDir);
 
@@ -71,7 +71,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertCount(0, $documents);
     }
 
-    public function test_reader_ignores_non_text_files(): void
+    public function testReaderIgnoresNonTextFiles(): void
     {
         file_put_contents($this->tempDir . '/story.txt', 'Some content.');
         file_put_contents($this->tempDir . '/image.png', "\x89PNG\r\n\x1a\n");
@@ -83,7 +83,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertNotEmpty($documents);
     }
 
-    public function test_reader_handles_single_file(): void
+    public function testReaderHandlesSingleFile(): void
     {
         file_put_contents($this->tempDir . '/only.txt', 'Single file content.');
 
@@ -93,7 +93,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertEquals('Single file content.', $documents[0]->content);
     }
 
-    public function test_reader_handles_multiple_files(): void
+    public function testReaderHandlesMultipleFiles(): void
     {
         for ($i = 1; $i <= 10; $i++) {
             file_put_contents($this->tempDir . "/file{$i}.txt", "Content of file {$i}.");
@@ -104,7 +104,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertCount(10, $documents);
     }
 
-    public function test_reader_document_has_content(): void
+    public function testReaderDocumentHasContent(): void
     {
         $expectedContent = "This is a test document with some meaningful content for testing purposes.";
         file_put_contents($this->tempDir . '/test.txt', $expectedContent);
@@ -115,7 +115,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertStringContainsString('This is a test document', $documents[0]->content);
     }
 
-    public function test_reader_handles_long_files(): void
+    public function testReaderHandlesLongFiles(): void
     {
         $longContent = str_repeat('This is a long line of text. ', 100) . "\n\nMore content here.";
         file_put_contents($this->tempDir . '/long.txt', $longContent);
@@ -126,7 +126,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertGreaterThan(2000, strlen($documents[0]->content));
     }
 
-    public function test_reader_handles_unicode_content(): void
+    public function testReaderHandlesUnicodeContent(): void
     {
         $unicodeContent = "Café résumé naïve. \n\n----------\n\nThis text comes from the collection.";
         file_put_contents($this->tempDir . '/unicode.txt', $unicodeContent);
@@ -137,7 +137,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertStringContainsString('Café résumé naïve', $documents[0]->content);
     }
 
-    public function test_reader_handles_files_with_special_names(): void
+    public function testReaderHandlesFilesWithSpecialNames(): void
     {
         file_put_contents($this->tempDir . '/story-with-dashes.txt', 'Dashes content.');
         file_put_contents($this->tempDir . '/story_with_underscores.txt', 'Underscores content.');
@@ -148,7 +148,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertCount(3, $documents);
     }
 
-    public function test_reader_handles_mixed_content_types(): void
+    public function testReaderHandlesMixedContentTypes(): void
     {
         file_put_contents($this->tempDir . '/good.txt', 'Good content.');
         file_put_contents($this->tempDir . '/good2.txt', 'More good content.');
@@ -160,7 +160,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertNotEmpty($documents);
     }
 
-    public function test_reader_handles_empty_files(): void
+    public function testReaderHandlesEmptyFiles(): void
     {
         file_put_contents($this->tempDir . '/empty.txt', '');
         file_put_contents($this->tempDir . '/nonempty.txt', 'Has content.');
@@ -170,7 +170,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertCount(2, $documents);
     }
 
-    public function test_reader_handles_files_with_newlines(): void
+    public function testReaderHandlesFilesWithNewlines(): void
     {
         $content = "Title line.\n\nFirst paragraph.\n\nSecond paragraph.\n\n----------\n\nThis text comes from the collection.";
         file_put_contents($this->tempDir . '/newlines.txt', $content);
@@ -181,7 +181,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertStringContainsString('Title line.', $documents[0]->content);
     }
 
-    public function test_reader_handles_directory_with_subdirectories(): void
+    public function testReaderHandlesDirectoryWithSubdirectories(): void
     {
         mkdir($this->tempDir . '/subdir', 0777, true);
         file_put_contents($this->tempDir . '/root.txt', 'Root content.');
@@ -193,7 +193,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertGreaterThan(0, count($documents));
     }
 
-public function test_reader_document_has_source_name(): void
+public function testReaderDocumentHasSourceName(): void
     {
         file_put_contents($this->tempDir . '/title.txt', "My Story Title\n\nContent here.");
 
@@ -203,7 +203,7 @@ public function test_reader_document_has_source_name(): void
         $this->assertEquals('title.txt', $documents[0]->sourceName);
     }
 
-    public function test_reader_handles_files_with_tabs(): void
+    public function testReaderHandlesFilesWithTabs(): void
     {
         $content = "Content\twith\ttabs.\n\nMore\tcontent.";
         file_put_contents($this->tempDir . '/tabs.txt', $content);
@@ -214,7 +214,7 @@ public function test_reader_document_has_source_name(): void
         $this->assertStringContainsString('Content', $documents[0]->content);
     }
 
-    public function test_reader_nonexistent_directory(): void
+    public function testReaderNonexistentDirectory(): void
     {
         $nonExistentDir = $this->tempDir . '/does_not_exist';
 

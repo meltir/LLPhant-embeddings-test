@@ -21,12 +21,12 @@ class QueryRefinerTest extends TestCase
         $this->refiner = new QueryRefiner($chatClient);
     }
 
-    public function test_refiner_is_instance_of_correct_class(): void
+    public function testRefinerIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(QueryRefiner::class, $this->refiner);
     }
 
-    public function test_refine_returns_shortened_query(): void
+    public function testRefineReturnsShortenedQuery(): void
     {
         $question = 'What was the speckled band in The Adventure of the Speckled Band story about?';
         $expectedRefined = 'speckled band mystery';
@@ -40,7 +40,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_sherlock_holmes_reference(): void
+    public function testRefineWithSherlockHolmesReference(): void
     {
         $question = 'Can you tell me about Sherlock Holmes and the case of the blue carbuncle?';
         $expectedRefined = 'blue carbuncle case';
@@ -54,7 +54,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_simple_question(): void
+    public function testRefineWithSimpleQuestion(): void
     {
         $question = 'Who is Watson?';
         $expectedRefined = 'Watson character';
@@ -68,7 +68,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_empty_question(): void
+    public function testRefineWithEmptyQuestion(): void
     {
         $expectedRefined = '';
 
@@ -81,7 +81,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_returns_string(): void
+    public function testRefineReturnsString(): void
     {
         $question = 'What happened?';
 
@@ -94,7 +94,7 @@ class QueryRefinerTest extends TestCase
         $this->assertIsString($result);
     }
 
-    public function test_refine_with_long_question(): void
+    public function testRefineWithLongQuestion(): void
     {
         $longQuestion = str_repeat('What can you tell me about ', 20) . '?';
         $expectedRefined = 'summary';
@@ -108,7 +108,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_unicode_question(): void
+    public function testRefineWithUnicodeQuestion(): void
     {
         $question = '¿Quién es Dr. Roylott?';
         $expectedRefined = 'Dr. Roylott';
@@ -122,12 +122,12 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refiner_implements_interface(): void
+    public function testRefinerImplementsInterface(): void
     {
         $this->assertInstanceOf(\App\Interfaces\IQueryRefiner::class, $this->refiner);
     }
 
-    public function test_refine_with_multiple_calls(): void
+    public function testRefineWithMultipleCalls(): void
     {
         $fake = new ClientFake([
             $this->createChatResponse('first query'),
@@ -146,7 +146,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals('third query', $result3);
     }
 
-    public function test_refine_with_question_mark(): void
+    public function testRefineWithQuestionMark(): void
     {
         $question = 'What is the answer?';
         $expectedRefined = 'answer';
@@ -160,7 +160,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_without_question_mark(): void
+    public function testRefineWithoutQuestionMark(): void
     {
         $question = 'Tell me about Holmes';
         $expectedRefined = 'Holmes information';
@@ -174,7 +174,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_number_in_question(): void
+    public function testRefineWithNumberInQuestion(): void
     {
         $question = 'How many stories are in the collection?';
         $expectedRefined = 'stories count collection';
@@ -188,7 +188,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_special_characters(): void
+    public function testRefineWithSpecialCharacters(): void
     {
         $question = 'What does @#\$%^ mean?';
         $expectedRefined = 'special characters meaning';
@@ -202,7 +202,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_all_caps_question(): void
+    public function testRefineWithAllCapsQuestion(): void
     {
         $question = 'WHO KILLED THE VICTIM?';
         $expectedRefined = 'who killed victim';
@@ -216,7 +216,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_wh_question(): void
+    public function testRefineWithWhQuestion(): void
     {
         $question = 'Where did the crime take place?';
         $expectedRefined = 'crime location';
@@ -230,7 +230,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_how_question(): void
+    public function testRefineWithHowQuestion(): void
     {
         $question = 'How did Holmes solve the mystery?';
         $expectedRefined = 'Holmes solve mystery method';
@@ -244,7 +244,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_why_question(): void
+    public function testRefineWithWhyQuestion(): void
     {
         $question = 'Why was the letter sent anonymously?';
         $expectedRefined = 'anonymous letter reason';
@@ -258,7 +258,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_when_question(): void
+    public function testRefineWithWhenQuestion(): void
     {
         $question = 'When did the event occur?';
         $expectedRefined = 'event timing';
@@ -272,7 +272,7 @@ class QueryRefinerTest extends TestCase
         $this->assertEquals($expectedRefined, $result);
     }
 
-    public function test_refine_with_can_question(): void
+    public function testRefineWithCanQuestion(): void
     {
         $question = 'Can Holmes predict the future?';
         $expectedRefined = 'Holmes predict future';
