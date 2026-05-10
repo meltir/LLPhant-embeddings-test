@@ -35,7 +35,6 @@ class LLPhantDocumentChunkerTest extends TestCase
 
         $chunks = $this->chunker->chunk($doc, 50, '.', 2);
 
-        $this->assertIsArray($chunks);
         $this->assertGreaterThan(0, count($chunks));
 
         foreach ($chunks as $chunk) {
@@ -51,7 +50,6 @@ class LLPhantDocumentChunkerTest extends TestCase
 
         $chunks = $this->chunker->chunk($doc, 20, '.', 0);
 
-        $this->assertIsArray($chunks);
         $this->assertGreaterThan(0, count($chunks));
     }
 
@@ -62,7 +60,7 @@ class LLPhantDocumentChunkerTest extends TestCase
 
         $chunks = $this->chunker->chunk($doc, 100, '.', 0);
 
-        $this->assertIsArray($chunks);
+        $this->assertGreaterThan(0, count($chunks));
         $this->assertGreaterThan(0, count($chunks));
     }
 
@@ -73,28 +71,25 @@ class LLPhantDocumentChunkerTest extends TestCase
 
         $chunks = $this->chunker->chunk($doc, 30, '.', 3);
 
-        $this->assertIsArray($chunks);
         $this->assertGreaterThan(0, count($chunks));
     }
 
     public function testChunkerReturnsEmptyArrayForEmptyContent(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = '';
 
         $chunks = $this->chunker->chunk($doc, 100, '.', 0);
-
-        $this->assertIsArray($chunks);
     }
 
     public function testChunkerReturnsEmptyArrayForWhitespaceContent(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "   \n\n   ";
 
         $chunks = $this->chunker->chunk($doc, 100, '.', 0);
-
-        $this->assertIsArray($chunks);
     }
 
     public function testChunkerSingleChunkForShortContent(): void
@@ -151,7 +146,6 @@ class LLPhantDocumentChunkerTest extends TestCase
 
         $chunks = $this->chunker->chunk($doc, 15, '.', 0);
 
-        $this->assertIsArray($chunks);
         $this->assertGreaterThan(0, count($chunks));
     }
 
@@ -162,7 +156,7 @@ class LLPhantDocumentChunkerTest extends TestCase
 
         $chunks = $this->chunker->chunk($doc, 20, ';', 0);
 
-        $this->assertIsArray($chunks);
+        $this->assertGreaterThan(0, count($chunks));
     }
 
     public function testChunkerHandlesLongParagraph(): void
@@ -173,7 +167,7 @@ class LLPhantDocumentChunkerTest extends TestCase
 
         $chunks = $this->chunker->chunk($doc, 100, '.', 5);
 
-        $this->assertIsArray($chunks);
+        $this->assertGreaterThan(0, count($chunks));
         $this->assertGreaterThan(0, count($chunks));
 
         foreach ($chunks as $chunk) {

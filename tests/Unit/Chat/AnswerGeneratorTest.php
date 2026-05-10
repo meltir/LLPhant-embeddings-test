@@ -29,7 +29,6 @@ class AnswerGeneratorTest extends TestCase
 
         $answer = $this->generator->generate($question, $context);
 
-        $this->assertIsString($answer);
         $this->assertNotEmpty($answer);
     }
 

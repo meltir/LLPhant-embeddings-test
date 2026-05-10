@@ -134,14 +134,14 @@ class RagApplicationTest extends TestCase
     {
         $app = new RagApplication();
 
-        $this->assertIsString($app->getVersion());
+        $this->assertGreaterThan(0, strlen($app->getVersion()));
     }
 
     public function testApplicationNameIsString(): void
     {
         $app = new RagApplication();
 
-        $this->assertIsString($app->getName());
+        $this->assertGreaterThan(0, strlen($app->getName()));
     }
 
     public function testApplicationCanFindCommands(): void
@@ -160,7 +160,6 @@ class RagApplicationTest extends TestCase
         $app = new RagApplication();
         $commands = $app->all();
 
-        $this->assertIsArray($commands);
         $this->assertGreaterThan(0, count($commands));
     }
 
@@ -177,7 +176,6 @@ class RagApplicationTest extends TestCase
     {
         $app = new RagApplication();
 
-        $this->assertIsString($app->getName());
         $this->assertGreaterThan(0, strlen($app->getName()));
     }
 
@@ -185,6 +183,6 @@ class RagApplicationTest extends TestCase
     {
         $app = new RagApplication();
 
-        $this->assertIsString($app->getVersion());
+        $this->assertStringMatchesFormat('%d.%d.%d', $app->getVersion());
     }
 }

@@ -78,7 +78,7 @@ class ContextAssessorTest extends TestCase
 
         $result = $testAssessor->assess('', $context);
 
-        $this->assertIsString($result);
+        $this->assertEquals('ENOUGH', $result);
     }
 
     public function testAssessWithEmptyContext(): void

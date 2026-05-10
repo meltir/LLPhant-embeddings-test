@@ -24,6 +24,7 @@ class CliEntrypointTest extends TestCase
     {
         $cliPath = __DIR__ . '/../../../cli.php';
         $content = file_get_contents($cliPath);
+        $this->assertIsString($content);
         $this->assertStringContainsString('#!/usr/bin/env php', $content);
     }
 
@@ -31,6 +32,7 @@ class CliEntrypointTest extends TestCase
     {
         $cliPath = __DIR__ . '/../../../cli.php';
         $content = file_get_contents($cliPath);
+        $this->assertIsString($content);
         $this->assertStringContainsString('ChatCommand', $content);
     }
 
@@ -38,6 +40,7 @@ class CliEntrypointTest extends TestCase
     {
         $cliPath = __DIR__ . '/../../../cli.php';
         $content = file_get_contents($cliPath);
+        $this->assertIsString($content);
         $this->assertStringContainsString('EmbeddingGenerateCommand', $content);
     }
 
@@ -45,6 +48,7 @@ class CliEntrypointTest extends TestCase
     {
         $cliPath = __DIR__ . '/../../../cli.php';
         $content = file_get_contents($cliPath);
+        $this->assertIsString($content);
         $this->assertStringContainsString('Usage:', $content);
     }
 
@@ -52,6 +56,7 @@ class CliEntrypointTest extends TestCase
     {
         $cliPath = __DIR__ . '/../../../cli.php';
         $content = file_get_contents($cliPath);
+        $this->assertIsString($content);
         $this->assertStringContainsString("'chat'", $content);
         $this->assertStringContainsString("'regenerate-embeddings'", $content);
     }
@@ -60,6 +65,7 @@ class CliEntrypointTest extends TestCase
     {
         $cliPath = __DIR__ . '/../../../cli.php';
         $content = file_get_contents($cliPath);
+        $this->assertIsString($content);
         $this->assertStringContainsString("exit(1)", $content);
     }
 
@@ -67,6 +73,7 @@ class CliEntrypointTest extends TestCase
     {
         $cliPath = __DIR__ . '/../../../cli.php';
         $content = file_get_contents($cliPath);
+        $this->assertIsString($content);
         $this->assertStringContainsString('Symfony\Component\Console\Input\ArrayInput', $content);
     }
 
@@ -74,6 +81,7 @@ class CliEntrypointTest extends TestCase
     {
         $cliPath = __DIR__ . '/../../../cli.php';
         $content = file_get_contents($cliPath);
+        $this->assertIsString($content);
         $this->assertStringContainsString('$command->run(', $content);
     }
 }

@@ -149,12 +149,14 @@ class VectorSearchServiceTest extends TestCase
     public function testSearchWithBooleanEmbedding(): void
     {
         $this->expectException(\Throwable::class);
+        /** @phpstan-ignore argument.type */
         $this->service->search([true, false, true]);
     }
 
     public function testSearchWithStringEmbedding(): void
     {
         $this->expectException(\Throwable::class);
+        /** @phpstan-ignore argument.type */
         $this->service->search(['one', 'two', 'three']);
     }
 
@@ -168,6 +170,7 @@ class VectorSearchServiceTest extends TestCase
     public function testServiceWithDifferentEntityClass(): void
     {
         $entityManager = $this->createStub(EntityManagerInterface::class);
+        /** @phpstan-ignore argument.type */
         $service = new VectorSearchService($entityManager, 'SomeOtherClass');
 
         $this->assertInstanceOf(VectorSearchService::class, $service);
@@ -223,13 +226,16 @@ class VectorSearchServiceTest extends TestCase
         $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $this->expectException(\TypeError::class);
-        new VectorSearchService($entityManager, null);
+        /** @phpstan-ignore argument.type */
+        $service = new VectorSearchService($entityManager, null);
+        unset($service);
     }
 
     public function testServiceWithEmptyEntityClass(): void
     {
         $entityManager = $this->createStub(EntityManagerInterface::class);
 
+        /** @phpstan-ignore argument.type */
         $service = new VectorSearchService($entityManager, '');
         $this->assertInstanceOf(VectorSearchService::class, $service);
     }

@@ -68,6 +68,7 @@ class ChatSessionTest extends TestCase
         $returnType = $method->getReturnType();
 
         $this->assertNotNull($returnType);
+        /** @var \ReflectionNamedType $returnType */
         $this->assertEquals('void', $returnType->getName());
     }
 

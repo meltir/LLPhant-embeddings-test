@@ -138,7 +138,6 @@ class RagPipelineTest extends TestCase
         $this->assertArrayHasKey('refinedQuery', $result);
         $this->assertArrayHasKey('expanded', $result);
         $this->assertArrayHasKey('context', $result);
-        $this->assertIsArray($result);
     }
 
     public function testAskWithEmptyContextStillReturnsAnswer(): void
@@ -168,6 +167,7 @@ class RagPipelineTest extends TestCase
 
     public function testAskCallsRefineOnce(): void
     {
+        $this->expectNotToPerformAssertions();
         $vectorSearch = $this->createStub(IVectorSearch::class);
         $queryRefiner = $this->createStub(QueryRefiner::class);
         $contextAssessor = $this->createStub(ContextAssessor::class);
@@ -186,11 +186,11 @@ class RagPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->ask('Who is Holmes?');
-        $this->assertTrue(true);
     }
 
     public function testAskCallsVectorSearchTwiceWhenExpanding(): void
     {
+        $this->expectNotToPerformAssertions();
         $vectorSearch = $this->createStub(IVectorSearch::class);
         $queryRefiner = $this->createStub(QueryRefiner::class);
         $contextAssessor = $this->createStub(ContextAssessor::class);
@@ -209,11 +209,11 @@ class RagPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->ask('Question?');
-        $this->assertTrue(true);
     }
 
     public function testAskCallsVectorSearchOnceWhenNotExpanding(): void
     {
+        $this->expectNotToPerformAssertions();
         $vectorSearch = $this->createStub(IVectorSearch::class);
         $queryRefiner = $this->createStub(QueryRefiner::class);
         $contextAssessor = $this->createStub(ContextAssessor::class);
@@ -232,7 +232,6 @@ class RagPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->ask('Question?');
-        $this->assertTrue(true);
     }
 
     public function testAskWithUnicodeQuestion(): void
@@ -421,6 +420,7 @@ class RagPipelineTest extends TestCase
 
     public function testAskWithDefaultKValues(): void
     {
+        $this->expectNotToPerformAssertions();
         $vectorSearch = $this->createStub(IVectorSearch::class);
         $queryRefiner = $this->createStub(QueryRefiner::class);
         $contextAssessor = $this->createStub(ContextAssessor::class);
@@ -439,11 +439,11 @@ class RagPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->ask('Question?');
-        $this->assertTrue(true);
     }
 
     public function testAskWithCustomKValues(): void
     {
+        $this->expectNotToPerformAssertions();
         $vectorSearch = $this->createStub(IVectorSearch::class);
         $queryRefiner = $this->createStub(QueryRefiner::class);
         $contextAssessor = $this->createStub(ContextAssessor::class);
@@ -462,7 +462,6 @@ class RagPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->ask('Question?', 8);
-        $this->assertTrue(true);
     }
 
     public function testAskReturnsRefinedQuery(): void

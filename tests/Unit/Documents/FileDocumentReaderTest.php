@@ -68,7 +68,6 @@ class FileDocumentReaderTest extends TestCase
     {
         $documents = $this->reader->read($this->tempDir);
 
-        $this->assertIsArray($documents);
         $this->assertCount(0, $documents);
     }
 
@@ -80,7 +79,6 @@ class FileDocumentReaderTest extends TestCase
 
         $documents = $this->reader->read($this->tempDir);
 
-        $this->assertIsArray($documents);
         $this->assertNotEmpty($documents);
     }
 
@@ -157,7 +155,6 @@ class FileDocumentReaderTest extends TestCase
 
         $documents = $this->reader->read($this->tempDir);
 
-        $this->assertIsArray($documents);
         $this->assertNotEmpty($documents);
     }
 
@@ -222,7 +219,6 @@ class FileDocumentReaderTest extends TestCase
 
         $documents = $this->reader->read($nonExistentDir);
 
-        $this->assertIsArray($documents);
         $this->assertCount(0, $documents);
     }
 }

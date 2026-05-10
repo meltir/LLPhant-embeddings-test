@@ -12,15 +12,6 @@ final class GenericEmbeddingGenerator extends AbstractOpenAIEmbeddingGenerator
 {
     private int $embeddingLength;
 
-    private function getRequiredEnv(string $key): string
-    {
-        $value = getenv($key);
-        if ($value === false || $value === '') {
-            throw new \RuntimeException("Environment variable '{$key}' is not set.");
-        }
-        return $value;
-    }
-
     /**
      * @throws \Exception
      */

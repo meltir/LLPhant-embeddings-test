@@ -269,6 +269,7 @@ class ConsoleLoggerTest extends TestCase
 
     public function testHandlerBatchHandle(): void
     {
+        $this->expectNotToPerformAssertions();
         $handler = new ConsoleLogger($this->output);
         $records = [];
         for ($i = 0; $i < 3; $i++) {
@@ -281,15 +282,14 @@ class ConsoleLoggerTest extends TestCase
             );
         }
 
-        $result = $handler->handleBatch($records);
-        $this->assertNull($result);
+        $handler->handleBatch($records);
     }
 
     public function testCloseHandler(): void
     {
+        $this->expectNotToPerformAssertions();
         $handler = new ConsoleLogger($this->output);
-        $result = $handler->close();
-        $this->assertNull($result);
+        $handler->close();
     }
 
     public function testPushHandler(): void

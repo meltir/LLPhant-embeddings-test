@@ -133,7 +133,6 @@ class GenericEmbeddingGeneratorTest extends TestCase
 
         $result = $generator->embedText('Test text to embed.');
 
-        $this->assertIsArray($result);
         $this->assertCount(768, $result);
     }
 
@@ -212,7 +211,6 @@ class GenericEmbeddingGeneratorTest extends TestCase
 
         $result = $generator->embedText('Café résumé naïve 🎉');
 
-        $this->assertIsArray($result);
         $this->assertCount(768, $result);
     }
 

@@ -87,16 +87,14 @@ class EmbeddingPipelineTest extends TestCase
 
     public function testRunWithEmptyDirectory(): void
     {
+        $this->expectNotToPerformAssertions();
         $reader = $this->createStub(FileDocumentReader::class);
+        $reader->method('read')->willReturn([]);
         $preprocessor = $this->createStub(TextDocumentPreprocessor::class);
         $chunker = $this->createStub(LLPhantDocumentChunker::class);
         $storage = $this->createStub(ChunkStorage::class);
         $output = $this->createStub(OutputInterface::class);
         $logger = $this->createStub(LoggerInterface::class);
-
-        $reader->method('read')->willReturn([]);
-        $storage->method('count')->willReturn(0);
-        $output->method('writeln');
 
         $pipeline = $this->createPipeline(
             $reader,
@@ -108,11 +106,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunProcessesDocuments(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "The Adventure of Test\n\nThis is test content.";
 
@@ -149,11 +147,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunSkipsExistingChunks(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -189,11 +187,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithCustomParameters(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -230,11 +228,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir(), 150, ';', 5);
-        $this->assertTrue(true);
     }
 
     public function testRunClearsEntityManagerEvery100Inserts(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -275,11 +273,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithAllChunksExisting(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -315,11 +313,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithMixedExistingAndNewChunks(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -361,11 +359,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithUnicodeDocument(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Café Story\n\nCafé résumé naïve content.";
 
@@ -402,11 +400,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithSingleChunk(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nShort.";
 
@@ -443,11 +441,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithManyChunksPerDocument(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -488,11 +486,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithSpecialCharactersInContent(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nSpecial @#\$%^&*() chars!";
 
@@ -529,11 +527,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithEmptyChunks(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -562,11 +560,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithChunkIndexZero(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -603,11 +601,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithLargeChunkIndex(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc = new Document();
         $doc->content = "Title\n\nContent.";
 
@@ -644,11 +642,11 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 
     public function testRunWithMultipleDocuments(): void
     {
+        $this->expectNotToPerformAssertions();
         $doc1 = new Document();
         $doc1->content = "Story One\n\nContent one.";
         $doc2 = new Document();
@@ -696,6 +694,5 @@ class EmbeddingPipelineTest extends TestCase
             $this->createFakeGenerator()
         );
         $pipeline->run(sys_get_temp_dir());
-        $this->assertTrue(true);
     }
 }

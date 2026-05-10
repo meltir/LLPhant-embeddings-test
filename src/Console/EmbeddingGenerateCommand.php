@@ -57,11 +57,25 @@ class EmbeddingGenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $textDir = (string) $input->getOption('text-dir');
-        $maxLength = (int) $input->getOption('max-length');
-        $separator = (string) $input->getOption('separator');
-        $wordOverlap = (int) $input->getOption('word-overlap');
-        $resetDb = (bool) $input->getOption('reset-db');
+        $textDir = $input->getOption('text-dir');
+        assert(is_string($textDir) || is_int($textDir));
+        $textDir = (string) $textDir;
+
+        $maxLength = $input->getOption('max-length');
+        assert(is_int($maxLength) || is_string($maxLength));
+        $maxLength = (int) $maxLength;
+
+        $separator = $input->getOption('separator');
+        assert(is_string($separator) || is_int($separator));
+        $separator = (string) $separator;
+
+        $wordOverlap = $input->getOption('word-overlap');
+        assert(is_int($wordOverlap) || is_string($wordOverlap));
+        $wordOverlap = (int) $wordOverlap;
+
+        $resetDb = $input->getOption('reset-db');
+        assert(is_bool($resetDb) || is_int($resetDb));
+        $resetDb = (bool) $resetDb;
 
         $output->writeln('<info>=== Sherlock Holmes Embedding Generator ===</info>');
 
@@ -137,6 +151,9 @@ class EmbeddingGenerateCommand extends Command
         $output->writeln("<info>Created chunks table with vector({$embeddingLength})</info>");
     }
 
+    /**
+     * @return float[]
+     */
     private function createEmbeddingVector(int $length): array
     {
         $vector = [];
@@ -147,6 +164,9 @@ class EmbeddingGenerateCommand extends Command
         return $vector;
     }
 
+    /**
+     * @param float[] $embedding
+     */
     private function createEmbeddingResponse(array $embedding): \OpenAI\Responses\Embeddings\CreateResponse
     {
         return \OpenAI\Responses\Embeddings\CreateResponse::fake([

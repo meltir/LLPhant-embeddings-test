@@ -24,7 +24,7 @@ class ConsoleLogger extends AbstractHandler
 
     public function __construct(
         OutputInterface $output,
-        ?Level $level = Level::Debug
+        Level $level = Level::Debug
     ) {
         parent::__construct($level);
         $this->output = $output;

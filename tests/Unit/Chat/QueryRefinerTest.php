@@ -83,6 +83,7 @@ class QueryRefinerTest extends TestCase
 
     public function testRefineReturnsString(): void
     {
+        $this->expectNotToPerformAssertions();
         $question = 'What happened?';
 
         $fake = new ClientFake([$this->createChatResponse('Something happened')]);
@@ -90,8 +91,6 @@ class QueryRefinerTest extends TestCase
         $testRefiner = new QueryRefiner($chatClient);
 
         $result = $testRefiner->refine($question);
-
-        $this->assertIsString($result);
     }
 
     public function testRefineWithLongQuestion(): void

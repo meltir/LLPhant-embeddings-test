@@ -72,7 +72,9 @@ class EmbeddingGenerateCommandTest extends TestCase
     {
         $definition = $this->command->getDefinition();
         $option = $definition->getOption('text-dir');
-        $this->assertStringContainsString('text', $option->getDefault());
+        $default = $option->getDefault();
+        $this->assertIsString($default);
+        $this->assertStringContainsString('text', $default);
     }
 
     public function testCommandMaxLengthDefault(): void
@@ -119,11 +121,11 @@ class EmbeddingGenerateCommandTest extends TestCase
         $this->assertStringContainsString('Generate embeddings', $commandDef->getDescription());
 
         $definition = $commandDef->getDefinition();
-        $this->assertNotNull($definition->getOption('text-dir'));
-        $this->assertNotNull($definition->getOption('max-length'));
-        $this->assertNotNull($definition->getOption('separator'));
-        $this->assertNotNull($definition->getOption('word-overlap'));
-        $this->assertNotNull($definition->getOption('reset-db'));
+        $this->assertTrue($definition->hasOption('text-dir'));
+        $this->assertTrue($definition->hasOption('max-length'));
+        $this->assertTrue($definition->hasOption('separator'));
+        $this->assertTrue($definition->hasOption('word-overlap'));
+        $this->assertTrue($definition->hasOption('reset-db'));
     }
 
     public function testCommandListOptions(): void

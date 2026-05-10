@@ -31,6 +31,9 @@ abstract class TestCase extends PHPUnitTestCase
         ]);
     }
 
+    /**
+     * @param float[] $embedding
+     */
     protected function createEmbeddingResponse(array $embedding): EmbeddingCreateResponse
     {
         return EmbeddingCreateResponse::fake([
@@ -40,6 +43,9 @@ abstract class TestCase extends PHPUnitTestCase
         ]);
     }
 
+    /**
+     * @return float[]
+     */
     protected function makeEmbeddingVector(int $length = 768): array
     {
         $vector = [];
@@ -50,6 +56,9 @@ abstract class TestCase extends PHPUnitTestCase
         return $vector;
     }
 
+    /**
+     * @return float[]
+     */
     protected function makeEmbeddingVectorForText(string $text, int $length = 768): array
     {
         $hash = crc32($text);

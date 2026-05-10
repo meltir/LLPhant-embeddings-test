@@ -11,9 +11,12 @@ use App\Interfaces\IVectorSearch;
 
 class VectorSearchService implements IVectorSearch
 {
+    /**
+     * @param class-string<\LLPhant\Embeddings\VectorStores\Doctrine\DoctrineEmbeddingEntityBase> $entityClass
+     */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly string $entityClass
+        private readonly string $entityClass = \App\Entity\Chunk::class
     ) {
     }
 

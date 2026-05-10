@@ -31,6 +31,12 @@ class ContextAssessor implements IContextAssessor
 
         $result = $this->chatClient->chat($messages);
 
-        return trim($result);
+        $normalized = strtoupper(trim($result));
+
+        return match ($normalized) {
+            'ENOUGH' => 'ENOUGH',
+            'NOT_ENOUGH' => 'NOT_ENOUGH',
+            default => 'NOT_ENOUGH',
+        };
     }
 }
