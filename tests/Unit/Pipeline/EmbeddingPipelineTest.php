@@ -52,7 +52,15 @@ class EmbeddingPipelineTest extends TestCase
         $output = $this->createStub(OutputInterface::class);
         $logger = $this->createStub(LoggerInterface::class);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $this->assertInstanceOf(EmbeddingPipeline::class, $pipeline);
     }
 
@@ -65,7 +73,15 @@ class EmbeddingPipelineTest extends TestCase
         $output = $this->createStub(OutputInterface::class);
         $logger = $this->createStub(LoggerInterface::class);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $this->assertInstanceOf(EmbeddingPipeline::class, $pipeline);
     }
 
@@ -82,7 +98,15 @@ class EmbeddingPipelineTest extends TestCase
         $storage->method('count')->willReturn(0);
         $output->method('writeln');
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -115,7 +139,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -147,7 +179,15 @@ class EmbeddingPipelineTest extends TestCase
         $storage->method('count')->willReturn(0);
         $storage->method('persist');
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -180,7 +220,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir(), 150, ';', 5);
         $this->assertTrue(true);
     }
@@ -217,7 +265,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(150);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -249,7 +305,15 @@ class EmbeddingPipelineTest extends TestCase
         $storage->method('count')->willReturn(0);
         $storage->method('persist');
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -287,7 +351,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -320,7 +392,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -353,7 +433,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -390,7 +478,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(20);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -423,7 +519,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -448,7 +552,15 @@ class EmbeddingPipelineTest extends TestCase
         $chunker->method('chunk')->willReturn([]);
         $storage->method('count')->willReturn(0);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -481,7 +593,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -514,7 +634,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -558,7 +686,15 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(2);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
+        $pipeline = $this->createPipeline(
+            $reader,
+            $preprocessor,
+            $chunker,
+            $storage,
+            $output,
+            $logger,
+            $this->createFakeGenerator()
+        );
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Chat;
 
 use App\Chat\AnswerGenerator;
+use App\Interfaces\IAnswerGenerator;
 use App\Infrastructure\LlmChatClient;
-use LLPhant\Chat\Message;
 use OpenAI\Testing\ClientFake;
 use Tests\Support\TestCase;
 
@@ -22,11 +22,6 @@ class AnswerGeneratorTest extends TestCase
         $this->generator = new AnswerGenerator($chatClient);
     }
 
-    public function testGeneratorIsInstanceOfCorrectClass(): void
-    {
-        $this->assertInstanceOf(AnswerGenerator::class, $this->generator);
-    }
-
     public function testGenerateReturnsAnswer(): void
     {
         $question = 'Who committed the crime?';
@@ -40,7 +35,8 @@ class AnswerGeneratorTest extends TestCase
 
     public function testGenerateWithSpecificResponse(): void
     {
-        $expectedAnswer = 'Based on the evidence, Sherlock Holmes deduced that the speckled band was a venomous snake used by Dr. Roylott.';
+        $expectedAnswer = 'Based on the evidence, Sherlock Holmes deduced that the speckled band'
+            . ' was a venomous snake used by Dr. Roylott.';
         $fake = new ClientFake([$this->createChatResponse($expectedAnswer)]);
         $chatClient = new LlmChatClient($fake, 'test-model');
         $testGenerator = new AnswerGenerator($chatClient);
@@ -192,7 +188,7 @@ class AnswerGeneratorTest extends TestCase
 
     public function testGeneratorImplementsInterface(): void
     {
-        $this->assertInstanceOf(\App\Interfaces\IAnswerGenerator::class, $this->generator);
+        $this->assertInstanceOf(IAnswerGenerator::class, $this->generator);
     }
 
     public function testGenerateWithSpecialCharactersInContext(): void

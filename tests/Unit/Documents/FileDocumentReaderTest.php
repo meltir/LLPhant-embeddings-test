@@ -44,15 +44,16 @@ class FileDocumentReaderTest extends TestCase
         rmdir($dir);
     }
 
-    public function testReaderIsInstanceOfCorrectClass(): void
-    {
-        $this->assertInstanceOf(FileDocumentReader::class, $this->reader);
-    }
-
     public function testReaderReadsTextFilesFromDirectory(): void
     {
-        file_put_contents($this->tempDir . '/story1.txt', "The Adventure of Test One\n\nThis is the content of story one.");
-        file_put_contents($this->tempDir . '/story2.txt', "The Adventure of Test Two\n\nThis is the content of story two.");
+        file_put_contents(
+            $this->tempDir . '/story1.txt',
+            "The Adventure of Test One\n\nThis is the content of story one."
+        );
+        file_put_contents(
+            $this->tempDir . '/story2.txt',
+            "The Adventure of Test Two\n\nThis is the content of story two."
+        );
 
         $documents = $this->reader->read($this->tempDir);
 
@@ -96,7 +97,7 @@ class FileDocumentReaderTest extends TestCase
     public function testReaderHandlesMultipleFiles(): void
     {
         for ($i = 1; $i <= 10; $i++) {
-            file_put_contents($this->tempDir . "/file{$i}.txt", "Content of file {$i}.");
+            file_put_contents($this->tempDir . "/file{$i}.txt", "Content of file $i.");
         }
 
         $documents = $this->reader->read($this->tempDir);
@@ -172,7 +173,8 @@ class FileDocumentReaderTest extends TestCase
 
     public function testReaderHandlesFilesWithNewlines(): void
     {
-        $content = "Title line.\n\nFirst paragraph.\n\nSecond paragraph.\n\n----------\n\nThis text comes from the collection.";
+        $content = "Title line.\n\nFirst paragraph.\n\nSecond paragraph.\n\n----------\n\n"
+            . "This text comes from the collection.";
         file_put_contents($this->tempDir . '/newlines.txt', $content);
 
         $documents = $this->reader->read($this->tempDir);

@@ -51,8 +51,13 @@ class ChatSession
             }
 
             $this->output->writeln('  Generating answer...');
-            $this->output->writeln(['', '<info>--- Answer ---</info>', $result['answer'], '--------------', '']);
-            $this->logger->debug('Answer generated', ['question' => $input, 'answer_length' => strlen($result['answer'])]);
+            $this->output->writeln([
+                '', '<info>--- Answer ---</info>', $result['answer'], '--------------', '',
+            ]);
+            $this->logger->debug('Answer generated', [
+                'question' => $input,
+                'answer_length' => strlen($result['answer']),
+            ]);
         }
     }
 }

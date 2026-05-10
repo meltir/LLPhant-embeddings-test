@@ -46,7 +46,9 @@ class EmbeddingPipeline
 
         if ($totalChunks > 0) {
             $progressBar = new ProgressBar($this->output, $totalChunks);
-            $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %message:30s%');
+            $progressBar->setFormat(
+                ' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %message:30s%'
+            );
             $progressBar->start();
 
             $currentDoc = 0;
@@ -66,7 +68,13 @@ class EmbeddingPipeline
                     $stats->total++;
                     $progressBar->setMessage("{$title}: chunk {$chunkDoc->chunkNumber}");
 
-                    if ($this->chunkStorage->exists($chunkDoc->sourceName, $chunkDoc->chunkNumber, $chunkDoc->content)) {
+                    if (
+                        $this->chunkStorage->exists(
+                            $chunkDoc->sourceName,
+                            $chunkDoc->chunkNumber,
+                            $chunkDoc->content
+                        )
+                    ) {
                         $stats->skipped++;
                         $progressBar->advance();
                         $this->logger->debug('Chunk already exists, skipping', [
@@ -96,7 +104,11 @@ class EmbeddingPipeline
         }
 
         $this->output->writeln("\n<info>=== Embedding generation complete ===</info>");
-        $this->output->writeln("Total chunks: <info>{$stats->total}</info>, Inserted: <info>{$stats->inserted}</info>, Skipped: <info>{$stats->skipped}</info>");
+        $this->output->writeln(
+            "Total chunks: <info>{$stats->total}</info>, "
+            . "Inserted: <info>{$stats->inserted}</info>, "
+            . "Skipped: <info>{$stats->skipped}</info>"
+        );
         $this->output->writeln("Total chunks in database: <info>{$this->chunkStorage->count()}</info>");
         $this->logger->info('Embedding generation complete', [
             'total' => $stats->total,

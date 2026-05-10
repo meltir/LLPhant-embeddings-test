@@ -31,11 +31,28 @@ class EmbeddingGenerateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('text-dir', null, InputOption::VALUE_OPTIONAL, 'Directory containing text files', __DIR__ . '/../../text')
+            ->addOption(
+                'text-dir',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Directory containing text files',
+                __DIR__ . '/../../text'
+            )
             ->addOption('max-length', null, InputOption::VALUE_OPTIONAL, 'Maximum chunk length', '200')
             ->addOption('separator', null, InputOption::VALUE_OPTIONAL, 'Chunk separator', '.')
-            ->addOption('word-overlap', null, InputOption::VALUE_OPTIONAL, 'Word overlap between chunks', '10')
-            ->addOption('reset-db', null, InputOption::VALUE_NONE, 'Drop and recreate the chunks table with correct vector dimensions');
+            ->addOption(
+                'word-overlap',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Word overlap between chunks',
+                '10'
+            )
+            ->addOption(
+                'reset-db',
+                null,
+                InputOption::VALUE_NONE,
+                'Drop and recreate the chunks table with correct vector dimensions'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -95,8 +112,11 @@ class EmbeddingGenerateCommand extends Command
         return $length;
     }
 
-    private function resetChunksTable(\Doctrine\ORM\EntityManagerInterface $entityManager, int $embeddingLength, OutputInterface $output): void
-    {
+    private function resetChunksTable(
+        \Doctrine\ORM\EntityManagerInterface $entityManager,
+        int $embeddingLength,
+        OutputInterface $output
+    ): void {
         $platform = $entityManager->getConnection()->getDatabasePlatform();
         $sql = $platform->getDropTableSQL('chunks');
         $entityManager->getConnection()->executeQuery($sql);

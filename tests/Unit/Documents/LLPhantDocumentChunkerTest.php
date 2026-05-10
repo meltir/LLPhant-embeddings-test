@@ -27,7 +27,10 @@ class LLPhantDocumentChunkerTest extends TestCase
     public function testChunkerChunksDocument(): void
     {
         $doc = new Document();
-        $doc->content = "This is a test document. It has multiple sentences. Each sentence is a separate thought. We need enough text to create chunks. The chunker should split this into multiple parts. Each part should be a reasonable size for processing.";
+        $doc->content = "This is a test document. It has multiple sentences. "
+            . "Each sentence is a separate thought. We need enough text to create chunks. "
+            . "The chunker should split this into multiple parts. "
+            . "Each part should be a reasonable size for processing.";
         $doc->sourceName = 'Test Document';
 
         $chunks = $this->chunker->chunk($doc, 50, '.', 2);

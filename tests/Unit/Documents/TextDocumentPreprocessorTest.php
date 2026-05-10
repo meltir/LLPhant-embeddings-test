@@ -18,11 +18,6 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->preprocessor = new TextDocumentPreprocessor();
     }
 
-    public function testPreprocessorIsInstanceOfCorrectClass(): void
-    {
-        $this->assertInstanceOf(TextDocumentPreprocessor::class, $this->preprocessor);
-    }
-
     public function testPreprocessSetsTitle(): void
     {
         $doc = new Document();
@@ -32,12 +27,12 @@ class TextDocumentPreprocessorTest extends TestCase
         $result = $this->preprocessor->preprocess($doc, $title);
 
         $this->assertEquals($title, $result->sourceName);
-        $this->assertEquals($title, $result->sourceName);
     }
 
     public function testPreprocessRemovesFooterPattern(): void
     {
-        $content = "This is the main content.\n\n----------\n\nThis text comes from the collection of Sherlock Holmes stories.";
+        $content = "This is the main content.\n\n----------\n\n"
+            . "This text comes from the collection of Sherlock Holmes stories.";
         $doc = new Document();
         $doc->content = $content;
 
@@ -127,7 +122,8 @@ class TextDocumentPreprocessorTest extends TestCase
 
     public function testPreprocessHandlesComplexFooter(): void
     {
-        $content = "The End.\n\n----------\n\nAnd other tales.\n\nThis text comes from the collection\nof wonderful stories by Arthur Conan Doyle.";
+        $content = "The End.\n\n----------\n\nAnd other tales.\n\n"
+            . "This text comes from the collection\nof wonderful stories by Arthur Conan Doyle.";
         $doc = new Document();
         $doc->content = $content;
 
@@ -218,7 +214,6 @@ class TextDocumentPreprocessorTest extends TestCase
         $result = $this->preprocessor->preprocess($doc, $title);
 
         $this->assertEquals($title, $result->sourceName);
-        $this->assertEquals($title, $result->sourceName);
     }
 
     public function testPreprocessHandlesEmptyTitle(): void
@@ -228,7 +223,6 @@ class TextDocumentPreprocessorTest extends TestCase
 
         $result = $this->preprocessor->preprocess($doc, '');
 
-        $this->assertEquals('', $result->sourceName);
         $this->assertEquals('', $result->sourceName);
     }
 }
