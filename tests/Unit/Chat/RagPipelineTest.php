@@ -14,6 +14,19 @@ use Tests\Support\TestCase;
 
 class RagPipelineTest extends TestCase
 {
+    private function createFakeGenerator(): \App\EmbeddingGenerator\GenericEmbeddingGenerator
+    {
+        $embeddingVector = $this->makeEmbeddingVector(768);
+        $fake = new \OpenAI\Testing\ClientFake([
+            $this->createEmbeddingResponse($embeddingVector),
+            $this->createEmbeddingResponse($embeddingVector),
+        ]);
+        $config = new \LLPhant\OpenAIConfig();
+        $config->client = $fake;
+
+        return new \App\EmbeddingGenerator\GenericEmbeddingGenerator($config);
+    }
+
     public function testPipelineIsInstanceOfCorrectClass(): void
     {
         $vectorSearch = $this->createStub(IVectorSearch::class);
@@ -21,7 +34,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor = $this->createStub(ContextAssessor::class);
         $answerGenerator = $this->createStub(AnswerGenerator::class);
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $this->assertInstanceOf(RagPipeline::class, $pipeline);
     }
 
@@ -42,7 +55,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn($answer);
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask($question);
 
         $this->assertEquals($answer, $result['answer']);
@@ -73,7 +86,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturnOnConsecutiveCalls('NOT_ENOUGH', 'ENOUGH');
         $answerGenerator->method('generate')->willReturn($answer);
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask($question);
 
         $this->assertEquals($answer, $result['answer']);
@@ -94,7 +107,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertArrayHasKey('answer', $result);
@@ -116,7 +129,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('No context answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertEquals('No context answer', $result['answer']);
@@ -135,7 +148,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $pipeline->ask('Who is Holmes?');
         $this->assertTrue(true);
     }
@@ -152,7 +165,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturnOnConsecutiveCalls('NOT_ENOUGH', 'ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $pipeline->ask('Question?');
         $this->assertTrue(true);
     }
@@ -169,7 +182,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $pipeline->ask('Question?');
         $this->assertTrue(true);
     }
@@ -186,7 +199,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Respuesta en espa\u00f1ol.');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('\u00bfQui\u00e9n es Holmes?');
 
         $this->assertEquals('Respuesta en espa\u00f1ol.', $result['answer']);
@@ -210,7 +223,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertStringContainsString('Story 1', $result['context']);
@@ -232,7 +245,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn($longAnswer);
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertEquals($longAnswer, $result['answer']);
@@ -250,7 +263,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('What does @#\$%^& mean?');
 
         $this->assertEquals('Answer', $result['answer']);
@@ -268,7 +281,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('42');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('What is the answer?');
 
         $this->assertEquals('42', $result['answer']);
@@ -286,7 +299,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertStringContainsString('clue', $result['context']);
@@ -306,7 +319,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertStringContainsString('Line one', $result['context']);
@@ -324,7 +337,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturnOnConsecutiveCalls('NOT_ENOUGH', 'ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $pipeline->ask('Question?');
         $this->assertTrue(true);
     }
@@ -341,7 +354,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $pipeline->ask('Question?', 8);
         $this->assertTrue(true);
     }
@@ -360,7 +373,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Original question?');
 
         $this->assertEquals($expectedRefined, $result['refinedQuery']);
@@ -381,7 +394,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertStringContainsString('Chunk: 1', $result['context']);
@@ -400,7 +413,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('   ');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertEquals('   ', $result['answer']);
@@ -425,7 +438,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturnOnConsecutiveCalls('NOT_ENOUGH', 'ENOUGH');
         $answerGenerator->method('generate')->willReturn('Combined answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('Question?');
 
         $this->assertTrue($result['expanded']);
@@ -445,7 +458,7 @@ class RagPipelineTest extends TestCase
         $contextAssessor->method('assess')->willReturn('ENOUGH');
         $answerGenerator->method('generate')->willReturn('Answer');
 
-        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator);
+        $pipeline = new RagPipeline($vectorSearch, $queryRefiner, $contextAssessor, $answerGenerator, $this->createFakeGenerator());
         $result = $pipeline->ask('What?! Really???');
 
         $this->assertEquals('Answer', $result['answer']);

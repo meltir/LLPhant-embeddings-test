@@ -17,6 +17,7 @@ abstract class TestCase extends PHPUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        putenv('EMBEDDING_MODEL=test-embedding-model');
         $this->fake = new ClientFake();
     }
 

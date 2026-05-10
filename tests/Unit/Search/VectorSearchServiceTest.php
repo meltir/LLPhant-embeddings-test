@@ -20,71 +20,71 @@ class VectorSearchServiceTest extends TestCase
         $this->service = new VectorSearchService($this->entityManager, \App\Entity\Chunk::class);
     }
 
-    public function test_service_is_instance_of_correct_class(): void
+    public function testServiceIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(VectorSearchService::class, $this->service);
     }
 
-    public function test_service_implements_interface(): void
+    public function testServiceImplementsInterface(): void
     {
         $this->assertInstanceOf(\App\Interfaces\IVectorSearch::class, $this->service);
     }
 
-    public function test_search_returns_array(): void
+    public function testSearchReturnsArray(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search($this->makeEmbeddingVector(768));
     }
 
-    public function test_search_with_empty_embedding(): void
+    public function testSearchWithEmptyEmbedding(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search([]);
     }
 
-    public function test_search_with_wrong_embedding_length(): void
+    public function testSearchWithWrongEmbeddingLength(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search(array_fill(0, 100, 0.0));
     }
 
-    public function test_search_with_correct_embedding_length(): void
+    public function testSearchWithCorrectEmbeddingLength(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search($this->makeEmbeddingVector(768));
     }
 
-    public function test_search_with_k_parameter(): void
+    public function testSearchWithKParameter(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search($this->makeEmbeddingVector(768), 10);
     }
 
-    public function test_search_with_k_equals_one(): void
+    public function testSearchWithKEqualsOne(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search($this->makeEmbeddingVector(768), 1);
     }
 
-    public function test_search_with_large_k(): void
+    public function testSearchWithLargeK(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search($this->makeEmbeddingVector(768), 1000);
     }
 
-    public function test_search_with_negative_k(): void
+    public function testSearchWithNegativeK(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search($this->makeEmbeddingVector(768), -1);
     }
 
-    public function test_search_with_zero_k(): void
+    public function testSearchWithZeroK(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search($this->makeEmbeddingVector(768), 0);
     }
 
-    public function test_search_with_float_embedding_values(): void
+    public function testSearchWithFloatEmbeddingValues(): void
     {
         $embedding = [];
         for ($i = 0; $i < 768; $i++) {
@@ -95,7 +95,7 @@ class VectorSearchServiceTest extends TestCase
         $this->service->search($embedding);
     }
 
-    public function test_search_with_negative_embedding_values(): void
+    public function testSearchWithNegativeEmbeddingValues(): void
     {
         $embedding = array_fill(0, 768, -0.5);
 
@@ -103,7 +103,7 @@ class VectorSearchServiceTest extends TestCase
         $this->service->search($embedding);
     }
 
-    public function test_search_with_mixed_embedding_values(): void
+    public function testSearchWithMixedEmbeddingValues(): void
     {
         $embedding = [];
         for ($i = 0; $i < 768; $i++) {
@@ -114,7 +114,7 @@ class VectorSearchServiceTest extends TestCase
         $this->service->search($embedding);
     }
 
-    public function test_search_with_unity_embedding(): void
+    public function testSearchWithUnityEmbedding(): void
     {
         $embedding = array_fill(0, 768, 1.0);
 
@@ -122,7 +122,7 @@ class VectorSearchServiceTest extends TestCase
         $this->service->search($embedding);
     }
 
-    public function test_search_with_zero_embedding(): void
+    public function testSearchWithZeroEmbedding(): void
     {
         $embedding = array_fill(0, 768, 0.0);
 
@@ -130,7 +130,7 @@ class VectorSearchServiceTest extends TestCase
         $this->service->search($embedding);
     }
 
-    public function test_search_with_nan_embedding(): void
+    public function testSearchWithNanEmbedding(): void
     {
         $embedding = array_fill(0, 768, NAN);
 
@@ -138,7 +138,7 @@ class VectorSearchServiceTest extends TestCase
         $this->service->search($embedding);
     }
 
-    public function test_search_with_infinity_embedding(): void
+    public function testSearchWithInfinityEmbedding(): void
     {
         $embedding = array_fill(0, 768, INF);
 
@@ -146,26 +146,26 @@ class VectorSearchServiceTest extends TestCase
         $this->service->search($embedding);
     }
 
-    public function test_search_with_boolean_embedding(): void
+    public function testSearchWithBooleanEmbedding(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search([true, false, true]);
     }
 
-    public function test_search_with_string_embedding(): void
+    public function testSearchWithStringEmbedding(): void
     {
         $this->expectException(\Throwable::class);
         $this->service->search(['one', 'two', 'three']);
     }
 
-    public function test_service_uses_chunk_entity_class(): void
+    public function testServiceUsesChunkEntityClass(): void
     {
         $service = new VectorSearchService($this->entityManager, \App\Entity\Chunk::class);
 
         $this->assertInstanceOf(VectorSearchService::class, $service);
     }
 
-    public function test_service_with_different_entity_class(): void
+    public function testServiceWithDifferentEntityClass(): void
     {
         $entityManager = $this->createStub(EntityManagerInterface::class);
         $service = new VectorSearchService($entityManager, 'SomeOtherClass');
@@ -173,7 +173,7 @@ class VectorSearchServiceTest extends TestCase
         $this->assertInstanceOf(VectorSearchService::class, $service);
     }
 
-    public function test_search_default_k_is_four(): void
+    public function testSearchDefaultKIsFour(): void
     {
         $reflection = new \ReflectionClass(\App\Interfaces\IVectorSearch::class);
         $method = $reflection->getMethod('search');
@@ -183,7 +183,7 @@ class VectorSearchServiceTest extends TestCase
         $this->assertEquals(4, $params[1]->getDefaultValue());
     }
 
-    public function test_search_embedding_type(): void
+    public function testSearchEmbeddingType(): void
     {
         $reflection = new \ReflectionClass(\App\Interfaces\IVectorSearch::class);
         $method = $reflection->getMethod('search');
@@ -192,7 +192,7 @@ class VectorSearchServiceTest extends TestCase
         $this->assertEquals('array', (string) $params[0]->getType());
     }
 
-    public function test_search_k_type(): void
+    public function testSearchKType(): void
     {
         $reflection = new \ReflectionClass(\App\Interfaces\IVectorSearch::class);
         $method = $reflection->getMethod('search');
@@ -201,7 +201,7 @@ class VectorSearchServiceTest extends TestCase
         $this->assertEquals('int', (string) $params[1]->getType());
     }
 
-    public function test_search_return_type(): void
+    public function testSearchReturnType(): void
     {
         $reflection = new \ReflectionClass(\App\Interfaces\IVectorSearch::class);
         $method = $reflection->getMethod('search');
@@ -210,7 +210,7 @@ class VectorSearchServiceTest extends TestCase
         $this->assertEquals('array', (string) $returnType);
     }
 
-    public function test_service_constructor_parameters(): void
+    public function testServiceConstructorParameters(): void
     {
         $entityManager = $this->createStub(EntityManagerInterface::class);
         $service = new VectorSearchService($entityManager, \App\Entity\Chunk::class);
@@ -218,7 +218,7 @@ class VectorSearchServiceTest extends TestCase
         $this->assertInstanceOf(VectorSearchService::class, $service);
     }
 
-    public function test_service_with_null_entity_class(): void
+    public function testServiceWithNullEntityClass(): void
     {
         $entityManager = $this->createStub(EntityManagerInterface::class);
 
@@ -226,7 +226,7 @@ class VectorSearchServiceTest extends TestCase
         new VectorSearchService($entityManager, null);
     }
 
-    public function test_service_with_empty_entity_class(): void
+    public function testServiceWithEmptyEntityClass(): void
     {
         $entityManager = $this->createStub(EntityManagerInterface::class);
 

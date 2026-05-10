@@ -193,7 +193,7 @@ class FileDocumentReaderTest extends TestCase
         $this->assertGreaterThan(0, count($documents));
     }
 
-public function testReaderDocumentHasSourceName(): void
+    public function testReaderDocumentHasSourceName(): void
     {
         file_put_contents($this->tempDir . '/title.txt', "My Story Title\n\nContent here.");
 

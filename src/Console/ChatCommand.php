@@ -25,6 +25,15 @@ use App\Logger\ConsoleLogger;
 )]
 class ChatCommand extends Command
 {
+    private function getRequiredEnv(string $key): string
+    {
+        $value = getenv($key);
+        if ($value === false || $value === '') {
+            throw new \RuntimeException("Environment variable '{$key}' is not set.");
+        }
+        return $value;
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -32,15 +41,15 @@ class ChatCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $chatModel = getenv("CHAT_MODEL") ?: "unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_XL";
+        $chatModel = $this->getRequiredEnv('CHAT_MODEL');
 
         $connection = new DatabaseConnection();
         $entityManager = $connection->create();
 
         $chatClient = new LlmChatClient(
             \OpenAI::factory()
-                ->withApiKey(getenv('LLM_API_KEY') ?: 'sk-not-needed')
-                ->withBaseUri(getenv('LLM_URL') ?: 'http://192.168.1.20:8001/v1')
+                ->withApiKey($this->getRequiredEnv('LLM_API_KEY'))
+                ->withBaseUri($this->getRequiredEnv('LLM_URL'))
                 ->make(),
             $chatModel
         );

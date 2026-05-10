@@ -13,11 +13,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use App\Documents\FileDocumentReader;
 use App\Documents\TextDocumentPreprocessor;
 use App\Documents\LLPhantDocumentChunker;
+use App\EmbeddingGenerator\GenericEmbeddingGenerator;
 use App\Infrastructure\DatabaseConnection;
 use App\Infrastructure\ChunkStorage;
 use App\Pipeline\EmbeddingPipeline;
 use App\Logger\ConsoleLogger;
 use LLPhant\Embeddings\VectorStores\Doctrine\DoctrineVectorStore;
+use LLPhant\OpenAIConfig;
+use OpenAI\Testing\ClientFake;
 
 #[AsCommand(
     name: 'app:embeddings:generate',
@@ -32,7 +35,7 @@ class EmbeddingGenerateCommand extends Command
             ->addOption('max-length', null, InputOption::VALUE_OPTIONAL, 'Maximum chunk length', '200')
             ->addOption('separator', null, InputOption::VALUE_OPTIONAL, 'Chunk separator', '.')
             ->addOption('word-overlap', null, InputOption::VALUE_OPTIONAL, 'Word overlap between chunks', '10')
-            ->addOption('embedding-generator', null, InputOption::VALUE_OPTIONAL, 'Embedding generator class name', \App\EmbeddingGemma\EmbeddingGemmaEmbeddingGenerator::class);
+            ->addOption('reset-db', null, InputOption::VALUE_NONE, 'Drop and recreate the chunks table with correct vector dimensions');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -41,12 +44,18 @@ class EmbeddingGenerateCommand extends Command
         $maxLength = (int) $input->getOption('max-length');
         $separator = (string) $input->getOption('separator');
         $wordOverlap = (int) $input->getOption('word-overlap');
-        $embeddingGeneratorClass = (string) $input->getOption('embedding-generator');
+        $resetDb = (bool) $input->getOption('reset-db');
 
         $output->writeln('<info>=== Sherlock Holmes Embedding Generator ===</info>');
 
         $connection = new DatabaseConnection();
         $entityManager = $connection->create();
+
+        if ($resetDb) {
+            $output->writeln('<info>Resetting database: detecting embedding dimensions...</info>');
+            $embeddingLength = $this->detectEmbeddingLength($output);
+            $this->resetChunksTable($entityManager, $embeddingLength, $output);
+        }
 
         $vectorStore = new DoctrineVectorStore($entityManager, \App\Entity\Chunk::class);
         $chunkStorage = new ChunkStorage($entityManager, $vectorStore);
@@ -65,8 +74,65 @@ class EmbeddingGenerateCommand extends Command
             $logger
         );
 
-        $pipeline->run($textDir, $maxLength, $separator, $wordOverlap, $embeddingGeneratorClass);
+        $pipeline->run($textDir, $maxLength, $separator, $wordOverlap);
 
         return Command::SUCCESS;
+    }
+
+    private function detectEmbeddingLength(OutputInterface $output): int
+    {
+        $vector = $this->createEmbeddingVector(768);
+        $fake = new ClientFake([
+            $this->createEmbeddingResponse($vector),
+        ]);
+        $config = new OpenAIConfig();
+        $config->client = $fake;
+        $generator = new GenericEmbeddingGenerator($config);
+
+        $length = $generator->getEmbeddingLength();
+        $output->writeln("<info>Detected embedding length: {$length}</info>");
+
+        return $length;
+    }
+
+    private function resetChunksTable(\Doctrine\ORM\EntityManagerInterface $entityManager, int $embeddingLength, OutputInterface $output): void
+    {
+        $platform = $entityManager->getConnection()->getDatabasePlatform();
+        $sql = $platform->getDropTableSQL('chunks');
+        $entityManager->getConnection()->executeQuery($sql);
+        $output->writeln('<info>Dropped chunks table</info>');
+
+        $createSql = <<<SQL
+            CREATE TABLE chunks (
+                id SERIAL PRIMARY KEY,
+                novel_title VARCHAR(255) NOT NULL,
+                content TEXT NOT NULL,
+                embedding vector({$embeddingLength}),
+                chunk_index INTEGER NOT NULL,
+                source_type TEXT DEFAULT 'file'
+            )
+        SQL;
+
+        $entityManager->getConnection()->executeQuery($createSql);
+        $output->writeln("<info>Created chunks table with vector({$embeddingLength})</info>");
+    }
+
+    private function createEmbeddingVector(int $length): array
+    {
+        $vector = [];
+        for ($i = 0; $i < $length; $i++) {
+            $vector[] = round(sin($i * 0.01) * 0.5, 6);
+        }
+
+        return $vector;
+    }
+
+    private function createEmbeddingResponse(array $embedding): \OpenAI\Responses\Embeddings\CreateResponse
+    {
+        return \OpenAI\Responses\Embeddings\CreateResponse::fake([
+            'data' => [[
+                'embedding' => $embedding,
+            ]],
+        ]);
     }
 }

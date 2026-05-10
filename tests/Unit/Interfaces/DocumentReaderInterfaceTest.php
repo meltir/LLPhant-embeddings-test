@@ -9,12 +9,12 @@ use Tests\Support\TestCase;
 
 class DocumentReaderInterfaceTest extends TestCase
 {
-    public function test_idocument_reader_interface_exists(): void
+    public function testIDocumentReaderInterfaceExists(): void
     {
         $this->assertTrue(interface_exists(IDocumentReader::class));
     }
 
-    public function test_idocument_reader_has_read_method(): void
+    public function testIDocumentReaderHasReadMethod(): void
     {
         $reflection = new \ReflectionClass(IDocumentReader::class);
         $this->assertTrue($reflection->hasMethod('read'));
@@ -29,7 +29,7 @@ class DocumentReaderInterfaceTest extends TestCase
         $this->assertEquals('string', (string) $params[0]->getType());
     }
 
-    public function test_idocument_reader_read_returns_document_array(): void
+    public function testIDocumentReaderReadReturnsDocumentArray(): void
     {
         $reflection = new \ReflectionClass(IDocumentReader::class);
         $method = $reflection->getMethod('read');

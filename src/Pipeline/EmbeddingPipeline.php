@@ -21,11 +21,12 @@ class EmbeddingPipeline
         private readonly LLPhantDocumentChunker $documentChunker,
         private readonly ChunkStorage $chunkStorage,
         private readonly OutputInterface $output,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly ?\App\EmbeddingGenerator\GenericEmbeddingGenerator $embeddingGenerator = null,
     ) {
     }
 
-    public function run(string $textDir, int $maxLength = 200, string $separator = '.', int $wordOverlap = 10, string $embeddingGeneratorClass = \App\EmbeddingGemma\EmbeddingGemmaEmbeddingGenerator::class): void
+    public function run(string $textDir, int $maxLength = 200, string $separator = '.', int $wordOverlap = 10): void
     {
         $stats = new EmbeddingStats();
 
@@ -33,7 +34,7 @@ class EmbeddingPipeline
         $this->output->writeln("Found <info>" . count($documents) . "</info> document(s).\n");
         $this->logger->info('Documents loaded', ['count' => count($documents)]);
 
-        $embeddingGenerator = new $embeddingGeneratorClass();
+        $generator = $this->embeddingGenerator ?? new \App\EmbeddingGenerator\GenericEmbeddingGenerator();
 
         $totalChunks = 0;
         foreach ($documents as $doc) {
@@ -75,7 +76,7 @@ class EmbeddingPipeline
                         continue;
                     }
 
-                    $embeddingGenerator->embedDocument($chunkDoc);
+                    $generator->embedDocument($chunkDoc);
 
                     $this->chunkStorage->persist($chunkDoc, $chunkDoc->sourceName, $chunkDoc->chunkNumber);
                     $stats->inserted++;

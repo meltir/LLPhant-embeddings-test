@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace App\Embeddings;
 
 use LLPhant\Embeddings\Document;
-use App\EmbeddingGemma\EmbeddingGemmaEmbeddingGenerator;
+use App\EmbeddingGenerator\GenericEmbeddingGenerator;
 
 class EmbeddingService
 {
+    public function __construct(
+        private readonly ?GenericEmbeddingGenerator $generator = null,
+    ) {
+    }
+
     public function embed(Document $document): Document
     {
-        $generator = new EmbeddingGemmaEmbeddingGenerator();
-        $generator->embedDocument($document);
+        $gen = $this->generator ?? new GenericEmbeddingGenerator();
+        $gen->embedDocument($document);
 
         return $document;
     }
@@ -22,8 +27,8 @@ class EmbeddingService
      */
     public function embedText(string $text): array
     {
-        $generator = new EmbeddingGemmaEmbeddingGenerator();
+        $gen = $this->generator ?? new GenericEmbeddingGenerator();
 
-        return $generator->embedText($text);
+        return $gen->embedText($text);
     }
 }

@@ -9,7 +9,7 @@ use Tests\Support\TestCase;
 
 class EmbeddingStatsTest extends TestCase
 {
-    public function test_stats_defaults_are_zero(): void
+    public function testStatsDefaultsAreZero(): void
     {
         $stats = new EmbeddingStats();
 
@@ -18,7 +18,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals(0, $stats->skipped);
     }
 
-    public function test_stats_can_be_incremented(): void
+    public function testStatsCanBeIncremented(): void
     {
         $stats = new EmbeddingStats();
         $stats->total++;
@@ -30,7 +30,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals(1, $stats->skipped);
     }
 
-    public function test_stats_multiple_increments(): void
+    public function testStatsMultipleIncrements(): void
     {
         $stats = new EmbeddingStats();
 
@@ -49,7 +49,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals(20, $stats->skipped);
     }
 
-    public function test_stats_total_equals_inserted_plus_skipped(): void
+    public function testStatsTotalEqualsInsertedPlusSkipped(): void
     {
         $stats = new EmbeddingStats();
 
@@ -60,7 +60,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals($stats->inserted + $stats->skipped, $stats->total);
     }
 
-    public function test_stats_inserted_can_be_zero(): void
+    public function testStatsInsertedCanBeZero(): void
     {
         $stats = new EmbeddingStats();
         $stats->total = 100;
@@ -70,7 +70,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals(100, $stats->total);
     }
 
-    public function test_stats_skipped_can_be_zero(): void
+    public function testStatsSkippedCanBeZero(): void
     {
         $stats = new EmbeddingStats();
         $stats->total = 100;
@@ -80,7 +80,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals(100, $stats->total);
     }
 
-    public function test_stats_all_can_be_zero(): void
+    public function testStatsAllCanBeZero(): void
     {
         $stats = new EmbeddingStats();
 
@@ -89,7 +89,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals(0, $stats->skipped);
     }
 
-    public function test_stats_large_numbers(): void
+    public function testStatsLargeNumbers(): void
     {
         $stats = new EmbeddingStats();
         $stats->total = 999999;
@@ -101,7 +101,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals(99, $stats->skipped);
     }
 
-    public function test_stats_properties_are_public(): void
+    public function testStatsPropertiesArePublic(): void
     {
         $reflection = new \ReflectionClass(EmbeddingStats::class);
 
@@ -111,7 +111,7 @@ class EmbeddingStatsTest extends TestCase
         }
     }
 
-    public function test_stats_properties_are_integers(): void
+    public function testStatsPropertiesAreIntegers(): void
     {
         $stats = new EmbeddingStats();
         $stats->total = 10;
@@ -123,7 +123,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertIsInt($stats->skipped);
     }
 
-    public function test_stats_can_be_reset(): void
+    public function testStatsCanBeReset(): void
     {
         $stats = new EmbeddingStats();
         $stats->total = 100;
@@ -139,7 +139,7 @@ class EmbeddingStatsTest extends TestCase
         $this->assertEquals(0, $stats->skipped);
     }
 
-    public function test_stats_has_correct_class(): void
+    public function testStatsHasCorrectClass(): void
     {
         $stats = new EmbeddingStats();
 

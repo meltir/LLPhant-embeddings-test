@@ -23,12 +23,12 @@ class LlmChatClientTest extends TestCase
         $this->client = new LlmChatClient($chatClient, 'test-model');
     }
 
-    public function test_client_is_instance_of_correct_class(): void
+    public function testClientIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(LlmChatClient::class, $this->client);
     }
 
-    public function test_chat_returns_response(): void
+    public function testChatReturnsResponse(): void
     {
         $messages = [
             Message::user('Hello'),
@@ -39,7 +39,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('Test response', $response);
     }
 
-    public function test_chat_with_multiple_messages(): void
+    public function testChatWithMultipleMessages(): void
     {
         $messages = [
             Message::system('You are a helpful assistant.'),
@@ -56,7 +56,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('6', $response);
     }
 
-    public function test_chat_with_empty_messages(): void
+    public function testChatWithEmptyMessages(): void
     {
         $messages = [];
 
@@ -68,7 +68,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('Empty response', $response);
     }
 
-    public function test_chat_with_long_message(): void
+    public function testChatWithLongMessage(): void
     {
         $longContent = str_repeat('This is a long message. ', 100);
         $messages = [Message::user($longContent)];
@@ -81,7 +81,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('Short reply', $response);
     }
 
-    public function test_chat_with_unicode_message(): void
+    public function testChatWithUnicodeMessage(): void
     {
         $messages = [Message::user('Café résumé naïve.')];
 
@@ -93,7 +93,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('Réponse en français.', $response);
     }
 
-    public function test_chat_with_special_characters(): void
+    public function testChatWithSpecialCharacters(): void
     {
         $messages = [Message::user('Special chars: @#$%^&*()!')];
 
@@ -105,7 +105,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('Got it!', $response);
     }
 
-    public function test_chat_uses_correct_model(): void
+    public function testChatUsesCorrectModel(): void
     {
         $fake = new ClientFake([$this->createChatResponse('Response', 'custom-model')]);
         $testClient = new LlmChatClient($fake, 'custom-model');
@@ -115,7 +115,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('Response', $response);
     }
 
-    public function test_chat_response_contains_only_content(): void
+    public function testChatResponseContainsOnlyContent(): void
     {
         $responseContent = 'This is the answer content.';
         $fake = new ClientFake([$this->createChatResponse($responseContent)]);
@@ -127,7 +127,7 @@ class LlmChatClientTest extends TestCase
         $this->assertNotEquals('chatcmpl-123', $result);
     }
 
-    public function test_chat_with_tool_call_message(): void
+    public function testChatWithToolCallMessage(): void
     {
         $messages = [
             Message::user('Search for information.'),
@@ -141,7 +141,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('Search results here.', $response);
     }
 
-    public function test_client_uses_fake_client_responses(): void
+    public function testClientUsesFakeClientResponses(): void
     {
         $fake = new ClientFake([
             $this->createChatResponse('First response'),
@@ -156,7 +156,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('Second response', $response2);
     }
 
-    public function test_chat_with_whitespace_response(): void
+    public function testChatWithWhitespaceResponse(): void
     {
         $fake = new ClientFake([$this->createChatResponse('   ')]);
         $testClient = new LlmChatClient($fake, 'test-model');
@@ -166,7 +166,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('   ', $response);
     }
 
-    public function test_chat_with_multiline_response(): void
+    public function testChatWithMultilineResponse(): void
     {
         $multiline = "Line one.\nLine two.\nLine three.";
         $fake = new ClientFake([$this->createChatResponse($multiline)]);
@@ -177,7 +177,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals($multiline, $response);
     }
 
-    public function test_chat_with_number_response(): void
+    public function testChatWithNumberResponse(): void
     {
         $fake = new ClientFake([$this->createChatResponse('42')]);
         $testClient = new LlmChatClient($fake, 'test-model');
@@ -187,7 +187,7 @@ class LlmChatClientTest extends TestCase
         $this->assertEquals('42', $response);
     }
 
-    public function test_chat_with_json_response(): void
+    public function testChatWithJsonResponse(): void
     {
         $json = '{"answer": "yes", "confidence": 0.95}';
         $fake = new ClientFake([$this->createChatResponse($json)]);

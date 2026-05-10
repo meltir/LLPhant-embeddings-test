@@ -16,15 +16,23 @@ class EmbeddingServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new EmbeddingService();
+        $embeddingVector = $this->makeEmbeddingVector(768);
+        $fake = new ClientFake([
+            $this->createEmbeddingResponse($embeddingVector),
+            $this->createEmbeddingResponse($embeddingVector),
+        ]);
+        $config = new \LLPhant\OpenAIConfig();
+        $config->client = $fake;
+        $generator = new \App\EmbeddingGenerator\GenericEmbeddingGenerator($config);
+        $this->service = new EmbeddingService($generator);
     }
 
-    public function test_service_is_instance_of_correct_class(): void
+    public function testServiceIsInstanceOfCorrectClass(): void
     {
         $this->assertInstanceOf(EmbeddingService::class, $this->service);
     }
 
-    public function test_embed_returns_document_with_embedding(): void
+    public function testEmbedReturnsDocumentWithEmbedding(): void
     {
         $doc = new Document();
         $doc->content = 'Test document content.';
@@ -39,14 +47,14 @@ class EmbeddingServiceTest extends TestCase
         $this->assertSame($doc, $result);
     }
 
-    public function test_embed_text_returns_array(): void
+    public function testEmbedTextReturnsArray(): void
     {
         $result = $this->service->embedText('Test text.');
 
         $this->assertIsArray($result);
     }
 
-    public function test_embed_text_returns_float_array(): void
+    public function testEmbedTextReturnsFloatArray(): void
     {
         $result = $this->service->embedText('Test text.');
 
@@ -55,14 +63,14 @@ class EmbeddingServiceTest extends TestCase
         }
     }
 
-    public function test_embed_text_returns_768_dimensions(): void
+    public function testEmbedTextReturns768Dimensions(): void
     {
         $result = $this->service->embedText('Test text.');
 
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_preserves_document_content(): void
+    public function testEmbedPreservesDocumentContent(): void
     {
         $doc = new Document();
         $doc->content = 'Original content';
@@ -74,7 +82,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertEquals('Original Title', $result->sourceName);
     }
 
-    public function test_embed_with_empty_document(): void
+    public function testEmbedWithEmptyDocument(): void
     {
         $doc = new Document();
         $doc->content = '';
@@ -84,7 +92,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertInstanceOf(Document::class, $result);
     }
 
-    public function test_embed_text_with_empty_string(): void
+    public function testEmbedTextWithEmptyString(): void
     {
         $result = $this->service->embedText('');
 
@@ -92,7 +100,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_text_with_unicode(): void
+    public function testEmbedTextWithUnicode(): void
     {
         $result = $this->service->embedText('Café résumé naïve 🎉');
 
@@ -100,7 +108,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_text_with_long_text(): void
+    public function testEmbedTextWithLongText(): void
     {
         $longText = str_repeat('This is a long text. ', 10);
         $result = $this->service->embedText($longText);
@@ -109,7 +117,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_text_with_special_characters(): void
+    public function testEmbedTextWithSpecialCharacters(): void
     {
         $result = $this->service->embedText('Special @#$%^&*() chars!');
 
@@ -117,7 +125,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_returns_same_document_instance(): void
+    public function testEmbedReturnsSameDocumentInstance(): void
     {
         $doc = new Document();
         $doc->content = 'Test';
@@ -127,7 +135,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertSame($doc, $result);
     }
 
-    public function test_embed_text_different_texts(): void
+    public function testEmbedTextDifferentTexts(): void
     {
         $result1 = $this->service->embedText('Text one.');
         $result2 = $this->service->embedText('Text two.');
@@ -138,7 +146,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result2);
     }
 
-    public function test_embed_text_values_are_between_negative_one_and_one(): void
+    public function testEmbedTextValuesAreBetweenNegativeOneAndOne(): void
     {
         $result = $this->service->embedText('Test text.');
 
@@ -148,7 +156,7 @@ class EmbeddingServiceTest extends TestCase
         }
     }
 
-    public function test_embed_with_number_content(): void
+    public function testEmbedWithNumberContent(): void
     {
         $doc = new Document();
         $doc->content = '12345';
@@ -158,7 +166,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertInstanceOf(Document::class, $result);
     }
 
-    public function test_embed_with_json_content(): void
+    public function testEmbedWithJsonContent(): void
     {
         $doc = new Document();
         $doc->content = '{"key": "value"}';
@@ -168,7 +176,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertInstanceOf(Document::class, $result);
     }
 
-    public function test_embed_text_with_newlines(): void
+    public function testEmbedTextWithNewlines(): void
     {
         $result = $this->service->embedText("Line one.\nLine two.\nLine three.");
 
@@ -176,7 +184,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_text_with_tabs(): void
+    public function testEmbedTextWithTabs(): void
     {
         $result = $this->service->embedText("Tab\there\tand\there.");
 
@@ -184,7 +192,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_text_with_mixed_content(): void
+    public function testEmbedTextWithMixedContent(): void
     {
         $mixed = "Text with 123 numbers, @symbols, and café words.\n\nNew line here.";
         $result = $this->service->embedText($mixed);
@@ -193,7 +201,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_service_creates_new_generator_each_call(): void
+    public function testServiceCreatesNewGeneratorEachCall(): void
     {
         // Each call should work independently
         $result1 = $this->service->embedText('First call.');
@@ -205,7 +213,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result2);
     }
 
-    public function test_embed_with_whitespace_only(): void
+    public function testEmbedWithWhitespaceOnly(): void
     {
         $doc = new Document();
         $doc->content = "   \n\n   ";
@@ -215,7 +223,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertInstanceOf(Document::class, $result);
     }
 
-    public function test_embed_text_with_single_character(): void
+    public function testEmbedTextWithSingleCharacter(): void
     {
         $result = $this->service->embedText('a');
 
@@ -223,7 +231,7 @@ class EmbeddingServiceTest extends TestCase
         $this->assertCount(768, $result);
     }
 
-    public function test_embed_text_with_whitespace(): void
+    public function testEmbedTextWithWhitespace(): void
     {
         $result = $this->service->embedText('   ');
 

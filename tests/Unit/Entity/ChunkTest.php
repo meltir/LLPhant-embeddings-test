@@ -9,7 +9,7 @@ use Tests\Support\TestCase;
 
 class ChunkTest extends TestCase
 {
-    public function test_chunk_creates_with_defaults(): void
+    public function testChunkCreatesWithDefaults(): void
     {
         $chunk = new Chunk();
 
@@ -17,7 +17,7 @@ class ChunkTest extends TestCase
         $this->assertEquals('manual', $chunk->sourceName);
     }
 
-    public function test_chunk_embedding_is_uninitialized_by_default(): void
+    public function testChunkEmbeddingIsUninitializedByDefault(): void
     {
         $chunk = new Chunk();
         $reflection = new \ReflectionClass($chunk);
@@ -25,7 +25,7 @@ class ChunkTest extends TestCase
         $this->assertFalse($prop->isInitialized($chunk));
     }
 
-    public function test_chunk_chunk_index_is_uninitialized_by_default(): void
+    public function testChunkChunkIndexIsUninitializedByDefault(): void
     {
         $chunk = new Chunk();
         $reflection = new \ReflectionClass($chunk);
@@ -33,7 +33,7 @@ class ChunkTest extends TestCase
         $this->assertFalse($prop->isInitialized($chunk));
     }
 
-    public function test_chunk_content_is_uninitialized_by_default(): void
+    public function testChunkContentIsUninitializedByDefault(): void
     {
         $chunk = new Chunk();
         $reflection = new \ReflectionClass($chunk);
@@ -41,7 +41,7 @@ class ChunkTest extends TestCase
         $this->assertFalse($prop->isInitialized($chunk));
     }
 
-    public function test_chunk_sets_source_type(): void
+    public function testChunkSetsSourceType(): void
     {
         $chunk = new Chunk();
         $chunk->sourceType = 'database';
@@ -49,7 +49,7 @@ class ChunkTest extends TestCase
         $this->assertEquals('database', $chunk->sourceType);
     }
 
-    public function test_chunk_sets_source_name(): void
+    public function testChunkSetsSourceName(): void
     {
         $chunk = new Chunk();
         $chunk->sourceName = 'test_novel';
@@ -57,7 +57,7 @@ class ChunkTest extends TestCase
         $this->assertEquals('test_novel', $chunk->sourceName);
     }
 
-    public function test_chunk_sets_chunk_index(): void
+    public function testChunkSetsChunkIndex(): void
     {
         $chunk = new Chunk();
         $chunk->chunkIndex = 5;
@@ -65,7 +65,7 @@ class ChunkTest extends TestCase
         $this->assertEquals(5, $chunk->chunkIndex);
     }
 
-    public function test_chunk_chunk_index_initially_unset(): void
+    public function testChunkChunkIndexInitiallyUnset(): void
     {
         $chunk = new Chunk();
         $reflection = new \ReflectionClass($chunk);
@@ -73,7 +73,7 @@ class ChunkTest extends TestCase
         $this->assertTrue($prop->isInitialized($chunk) === false);
     }
 
-    public function test_chunk_sets_content(): void
+    public function testChunkSetsContent(): void
     {
         $content = 'This is a test chunk content with some text.';
         $chunk = new Chunk();
@@ -82,7 +82,7 @@ class ChunkTest extends TestCase
         $this->assertEquals($content, $chunk->content);
     }
 
-    public function test_chunk_content_initially_unset(): void
+    public function testChunkContentInitiallyUnset(): void
     {
         $chunk = new Chunk();
         $reflection = new \ReflectionClass($chunk);
@@ -90,7 +90,7 @@ class ChunkTest extends TestCase
         $this->assertTrue($prop->isInitialized($chunk) === false);
     }
 
-    public function test_chunk_sets_embedding(): void
+    public function testChunkSetsEmbedding(): void
     {
         $embedding = array_fill(0, 768, 0.001);
         $chunk = new Chunk();
@@ -100,7 +100,7 @@ class ChunkTest extends TestCase
         $this->assertEquals(0.001, $chunk->embedding[0]);
     }
 
-    public function test_chunk_embedding_initially_unset(): void
+    public function testChunkEmbeddingInitiallyUnset(): void
     {
         $chunk = new Chunk();
         $reflection = new \ReflectionClass($chunk);
@@ -108,7 +108,7 @@ class ChunkTest extends TestCase
         $this->assertTrue($prop->isInitialized($chunk) === false);
     }
 
-    public function test_chunk_embedding_length_is_768(): void
+    public function testChunkEmbeddingLengthIs768(): void
     {
         $chunk = new Chunk();
         $reflection = new \ReflectionClass($chunk);
@@ -117,14 +117,14 @@ class ChunkTest extends TestCase
         $this->assertInstanceOf(Chunk::class, $chunk);
     }
 
-    public function test_chunk_is_instance_of_llphant_base(): void
+    public function testChunkIsInstanceOfLlphantBase(): void
     {
         $chunk = new Chunk();
 
         $this->assertInstanceOf(\LLPhant\Embeddings\VectorStores\Doctrine\DoctrineEmbeddingEntityBase::class, $chunk);
     }
 
-    public function test_chunk_content_can_be_long_text(): void
+    public function testChunkContentCanBeLongText(): void
     {
         $longContent = str_repeat('This is a long piece of text. ', 100);
         $chunk = new Chunk();
@@ -134,7 +134,7 @@ class ChunkTest extends TestCase
         $this->assertGreaterThan(2000, strlen($chunk->content));
     }
 
-    public function test_chunk_chunk_index_can_be_zero(): void
+    public function testChunkChunkIndexCanBeZero(): void
     {
         $chunk = new Chunk();
         $chunk->chunkIndex = 0;
@@ -142,7 +142,7 @@ class ChunkTest extends TestCase
         $this->assertEquals(0, $chunk->chunkIndex);
     }
 
-    public function test_chunk_chunk_index_can_be_large(): void
+    public function testChunkChunkIndexCanBeLarge(): void
     {
         $chunk = new Chunk();
         $chunk->chunkIndex = 999999;

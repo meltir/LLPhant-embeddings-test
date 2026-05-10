@@ -11,17 +11,26 @@ use LLPhant\Embeddings\VectorStores\Doctrine\VectorType;
 
 class DatabaseConnection
 {
+    private function getRequiredEnv(string $key): string
+    {
+        $value = getenv($key);
+        if ($value === false || $value === '') {
+            throw new \RuntimeException("Environment variable '{$key}' is not set.");
+        }
+        return $value;
+    }
+
     public function create(): EntityManager
     {
         Type::addType(VectorType::VECTOR, VectorType::class);
 
         $isDevMode = true;
         $dbParams = [
-            'dbname' => getenv('DB_NAME') ?: 'sherlock',
-            'user' => getenv('DB_USER') ?: 'postgres',
-            'password' => getenv('DB_PASSWORD') ?: 'password',
-            'host' => getenv('DB_HOST') ?: 'db',
-            'port' => (int)(getenv('DB_PORT') ?: 5432),
+            'dbname' => $this->getRequiredEnv('DB_NAME'),
+            'user' => $this->getRequiredEnv('DB_USER'),
+            'password' => $this->getRequiredEnv('DB_PASSWORD'),
+            'host' => $this->getRequiredEnv('DB_HOST'),
+            'port' => (int)$this->getRequiredEnv('DB_PORT'),
             'driver' => 'pdo_pgsql',
         ];
 

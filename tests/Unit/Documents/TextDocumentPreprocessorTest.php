@@ -196,7 +196,7 @@ class TextDocumentPreprocessorTest extends TestCase
         $this->assertEquals('Long Story', $result->sourceName);
     }
 
-public function testPreprocessHandlesContentWithMixedWhitespace(): void
+    public function testPreprocessHandlesContentWithMixedWhitespace(): void
     {
         $content = "   Content with tabs\t\tand spaces   \n\n   \n\nMore content   ";
         $doc = new Document();

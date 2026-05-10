@@ -13,7 +13,6 @@ use Tests\Support\TestCase;
 
 class ChatSessionTest extends TestCase
 {
-
     public function testSessionIsInstanceOfCorrectClass(): void
     {
         $pipeline = $this->createStub(RagPipeline::class);

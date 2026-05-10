@@ -23,9 +23,24 @@ class EmbeddingPipelineTest extends TestCase
         LLPhantDocumentChunker $chunker,
         ChunkStorage $storage,
         OutputInterface $output,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ?\App\EmbeddingGenerator\GenericEmbeddingGenerator $generator = null
     ): EmbeddingPipeline {
-        return new EmbeddingPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        return new EmbeddingPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $generator);
+    }
+
+    private function createFakeGenerator(): \App\EmbeddingGenerator\GenericEmbeddingGenerator
+    {
+        $embeddingVector = $this->makeEmbeddingVector(768);
+        $responses = [];
+        for ($i = 0; $i < 200; $i++) {
+            $responses[] = $this->createEmbeddingResponse($embeddingVector);
+        }
+        $fake = new \OpenAI\Testing\ClientFake($responses);
+        $config = new \LLPhant\OpenAIConfig();
+        $config->client = $fake;
+
+        return new \App\EmbeddingGenerator\GenericEmbeddingGenerator($config);
     }
 
     public function testPipelineIsInstanceOfCorrectClass(): void
@@ -37,7 +52,7 @@ class EmbeddingPipelineTest extends TestCase
         $output = $this->createStub(OutputInterface::class);
         $logger = $this->createStub(LoggerInterface::class);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $this->assertInstanceOf(EmbeddingPipeline::class, $pipeline);
     }
 
@@ -50,7 +65,7 @@ class EmbeddingPipelineTest extends TestCase
         $output = $this->createStub(OutputInterface::class);
         $logger = $this->createStub(LoggerInterface::class);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $this->assertInstanceOf(EmbeddingPipeline::class, $pipeline);
     }
 
@@ -67,7 +82,7 @@ class EmbeddingPipelineTest extends TestCase
         $storage->method('count')->willReturn(0);
         $output->method('writeln');
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -100,7 +115,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -132,7 +147,7 @@ class EmbeddingPipelineTest extends TestCase
         $storage->method('count')->willReturn(0);
         $storage->method('persist');
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -165,41 +180,8 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir(), 150, ';', 5);
-        $this->assertTrue(true);
-    }
-
-    public function testRunWithCustomEmbeddingGenerator(): void
-    {
-        $doc = new Document();
-        $doc->content = "Title\n\nContent.";
-
-        $processedDoc = new Document();
-        $processedDoc->content = 'Title\n\nContent.';
-
-        $chunk = new Document();
-        $chunk->content = 'Content.';
-        $chunk->sourceName = 'Title';
-        $chunk->chunkNumber = 1;
-
-        $reader = $this->createStub(FileDocumentReader::class);
-        $preprocessor = $this->createStub(TextDocumentPreprocessor::class);
-        $chunker = $this->createStub(LLPhantDocumentChunker::class);
-        $storage = $this->createStub(ChunkStorage::class);
-        $output = $this->createStub(OutputInterface::class);
-        $logger = $this->createStub(LoggerInterface::class);
-
-        $reader->method('read')->willReturn([$doc]);
-        $preprocessor->method('preprocess')->willReturn($processedDoc);
-        $chunker->method('chunk')->willReturn([$chunk]);
-        $storage->method('exists')->willReturn(false);
-        $storage->method('persist')->willReturnCallback(function () {
-        });
-        $storage->method('count')->willReturn(1);
-
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
-        $pipeline->run(sys_get_temp_dir(), 200, '.', 10, \App\EmbeddingGemma\EmbeddingGemmaEmbeddingGenerator::class);
         $this->assertTrue(true);
     }
 
@@ -235,7 +217,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(150);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -267,7 +249,7 @@ class EmbeddingPipelineTest extends TestCase
         $storage->method('count')->willReturn(0);
         $storage->method('persist');
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -305,7 +287,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -338,7 +320,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -371,7 +353,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -408,7 +390,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(20);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -441,7 +423,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -466,7 +448,7 @@ class EmbeddingPipelineTest extends TestCase
         $chunker->method('chunk')->willReturn([]);
         $storage->method('count')->willReturn(0);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -499,7 +481,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -532,7 +514,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(1);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }
@@ -576,7 +558,7 @@ class EmbeddingPipelineTest extends TestCase
         });
         $storage->method('count')->willReturn(2);
 
-        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger);
+        $pipeline = $this->createPipeline($reader, $preprocessor, $chunker, $storage, $output, $logger, $this->createFakeGenerator());
         $pipeline->run(sys_get_temp_dir());
         $this->assertTrue(true);
     }

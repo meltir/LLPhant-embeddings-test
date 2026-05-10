@@ -117,7 +117,7 @@ class LLPhantDocumentChunkerTest extends TestCase
         $this->assertEquals(range(0, count($chunks) - 1), $chunkNumbers);
     }
 
-public function testChunkerPreservesSourceName(): void
+    public function testChunkerPreservesSourceName(): void
     {
         $doc = new Document();
         $doc->content = "Sentence one. Sentence two.";

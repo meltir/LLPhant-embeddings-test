@@ -16,7 +16,8 @@ class RagPipeline
         private readonly IVectorSearch $vectorSearch,
         private readonly IQueryRefiner $queryRefiner,
         private readonly IContextAssessor $contextAssessor,
-        private readonly IAnswerGenerator $answerGenerator
+        private readonly IAnswerGenerator $answerGenerator,
+        private readonly ?\App\EmbeddingGenerator\GenericEmbeddingGenerator $embeddingGenerator = null,
     ) {
     }
 
@@ -57,8 +58,8 @@ class RagPipeline
         $doc = new Document();
         $doc->content = $text;
 
-        $embeddingGenerator = new \App\EmbeddingGemma\EmbeddingGemmaEmbeddingGenerator();
-        $embeddingGenerator->embedDocument($doc);
+        $generator = $this->embeddingGenerator ?? new \App\EmbeddingGenerator\GenericEmbeddingGenerator();
+        $generator->embedDocument($doc);
 
         return $doc->embedding ?? [];
     }

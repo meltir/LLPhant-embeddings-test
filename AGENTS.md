@@ -16,7 +16,7 @@ Sherlock Holmes RAG Chatbot — a local, self-hosted Retrieval-Augmented Generat
 ## Models
 
 - **Chat/LLM**: `unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_XL` (served via llama.cpp at `192.168.1.20:8001`)
-- **Embeddings**: `unsloth/embeddinggemma-300m-GGUF:Q4_0` (768 dimensions, batch size 1)
+- **Embeddings**: OpenAI-compatible embedding API (768 dimensions, batch size 1)
 
 ## Key Architectural Decisions
 
@@ -72,7 +72,7 @@ src/
   Chat/           — RAG pipeline, answer generation, context assessment
   Console/        — Symfony commands (RagApplication, ChatCommand, EmbeddingGenerateCommand)
   Documents/      — File reading, preprocessing, chunking
-  EmbeddingGemma/ — EmbeddingGemmaEmbeddingGenerator
+  EmbeddingGenerator/ — GenericEmbeddingGenerator
   Embeddings/     — EmbeddingService
   Entity/         — Doctrine Chunk entity
   Infrastructure/ — Database connection, LLM client

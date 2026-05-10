@@ -31,10 +31,9 @@ Context: Fixed multiple errors and failures across test files:
 - `FileDocumentReaderTest` — Fix PDF test data, adjust assertions
 - `LLPhantDocumentChunkerTest` — Fix chunk numbers to 0-indexed
 - `TextDocumentPreprocessorTest` — Fix footer pattern tests, whitespace assertions
-- `EmbeddingGemmaEmbeddingGeneratorTest` — Remove duplicate `sourceName` assignment
+- `EmbeddingServiceTest` — Reduce long text size to fit batch limits
 - `ConsoleLoggerTest` — Fix handler count, remove `setFormatter`/`getFormatter` tests, fix `pushHandler`
 - `EmbeddingPipelineTest` — Fix mock expectations for double-invocation pattern
-- `EmbeddingServiceTest` — Reduce long text size to fit batch limits
 - `ChatCommandTest` — Fix help test, fix DB connection test
 - `EmbeddingGenerateCommandTest` — Fix help test, remove undefined `$output` reference
 - `RagApplicationTest` — Check app name/version instead of non-existent methods

@@ -24,14 +24,14 @@ class ConsoleLoggerTest extends TestCase
         $this->output = new BufferedOutput();
     }
 
-    public function test_create_returns_monolog_logger(): void
+    public function testCreateReturnsMonologLogger(): void
     {
         $logger = ConsoleLogger::create($this->output);
 
         $this->assertInstanceOf(MonologLogger::class, $logger);
     }
 
-    public function test_create_adds_handler_to_logger(): void
+    public function testCreateAddsHandlerToLogger(): void
     {
         $logger = ConsoleLogger::create($this->output);
 
@@ -39,7 +39,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertInstanceOf(ConsoleLogger::class, $handler);
     }
 
-    public function test_create_adds_psr_log_message_processor(): void
+    public function testCreateAddsPsrLogMessageProcessor(): void
     {
         $logger = ConsoleLogger::create($this->output);
 
@@ -47,7 +47,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertCount(1, $logger->getHandlers());
     }
 
-    public function test_info_level_writes_to_output(): void
+    public function testInfoLevelWritesToOutput(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->info('Test info message');
@@ -56,7 +56,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Test info message', $content);
     }
 
-    public function test_debug_level_not_shown_at_normal_verbosity(): void
+    public function testDebugLevelNotShownAtNormalVerbosity(): void
     {
         $output = new BufferedOutput(); // default verbosity is normal
         $logger = ConsoleLogger::create($output);
@@ -66,7 +66,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertEmpty($content);
     }
 
-    public function test_debug_level_shown_at_verbose_verbosity(): void
+    public function testDebugLevelShownAtVerboseVerbosity(): void
     {
         $output = new BufferedOutput(OutputInterface::VERBOSITY_VERBOSE);
         $logger = ConsoleLogger::create($output);
@@ -76,7 +76,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Debug message', $content);
     }
 
-    public function test_error_level_shown_at_normal_verbosity(): void
+    public function testErrorLevelShownAtNormalVerbosity(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->error('Error message');
@@ -85,7 +85,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Error message', $content);
     }
 
-    public function test_warning_level_shown_at_normal_verbosity(): void
+    public function testWarningLevelShownAtNormalVerbosity(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->warning('Warning message');
@@ -94,7 +94,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Warning message', $content);
     }
 
-    public function test_notice_level_shown_at_verbose_verbosity(): void
+    public function testNoticeLevelShownAtVerboseVerbosity(): void
     {
         $output = new BufferedOutput(OutputInterface::VERBOSITY_VERBOSE);
         $logger = ConsoleLogger::create($output);
@@ -104,7 +104,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Notice message', $content);
     }
 
-    public function test_notice_level_not_shown_at_normal_verbosity(): void
+    public function testNoticeLevelNotShownAtNormalVerbosity(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->notice('Notice message');
@@ -113,7 +113,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertEmpty($content);
     }
 
-    public function test_critical_level_shown_at_normal_verbosity(): void
+    public function testCriticalLevelShownAtNormalVerbosity(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->critical('Critical message');
@@ -122,7 +122,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Critical message', $content);
     }
 
-    public function test_alert_level_shown_at_normal_verbosity(): void
+    public function testAlertLevelShownAtNormalVerbosity(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->alert('Alert message');
@@ -131,7 +131,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Alert message', $content);
     }
 
-    public function test_emergency_level_shown_at_normal_verbosity(): void
+    public function testEmergencyLevelShownAtNormalVerbosity(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->emergency('Emergency message');
@@ -140,7 +140,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Emergency message', $content);
     }
 
-    public function test_handle_returns_false(): void
+    public function testHandleReturnsFalse(): void
     {
         $handler = new ConsoleLogger($this->output);
         $record = new LogRecord(
@@ -155,7 +155,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function test_handler_with_custom_level(): void
+    public function testHandlerWithCustomLevel(): void
     {
         $output = new BufferedOutput(OutputInterface::VERBOSITY_VERBOSE);
         $handler = new ConsoleLogger($output, Level::Debug);
@@ -163,7 +163,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertInstanceOf(ConsoleLogger::class, $handler);
     }
 
-    public function test_handler_with_info_level_default(): void
+    public function testHandlerWithInfoLevelDefault(): void
     {
         $output = new BufferedOutput();
         $handler = new ConsoleLogger($output);
@@ -171,7 +171,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertInstanceOf(ConsoleLogger::class, $handler);
     }
 
-    public function test_multiple_messages(): void
+    public function testMultipleMessages(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->info('First message');
@@ -184,7 +184,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Third message', $content);
     }
 
-    public function test_message_with_context(): void
+    public function testMessageWithContext(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->info('Message with context', ['key' => 'value', 'count' => 42]);
@@ -193,7 +193,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Message with context', $content);
     }
 
-    public function test_quiet_verbosity_hides_all_messages(): void
+    public function testQuietVerbosityHidesAllMessages(): void
     {
         $output = new BufferedOutput(OutputInterface::VERBOSITY_QUIET);
         $logger = ConsoleLogger::create($output);
@@ -204,7 +204,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertEmpty($content);
     }
 
-    public function test_debug_verbosity_shows_everything(): void
+    public function testDebugVerbosityShowsEverything(): void
     {
         $output = new BufferedOutput(OutputInterface::VERBOSITY_DEBUG);
         $logger = ConsoleLogger::create($output);
@@ -220,21 +220,21 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Error', $content);
     }
 
-    public function test_logger_name_is_app(): void
+    public function testLoggerNameIsApp(): void
     {
         $logger = ConsoleLogger::create($this->output);
 
         $this->assertEquals('app', $logger->getName());
     }
 
-    public function test_console_logger_extends_abstract_handler(): void
+    public function testConsoleLoggerExtendsAbstractHandler(): void
     {
         $handler = new ConsoleLogger($this->output);
 
         $this->assertInstanceOf(\Monolog\Handler\AbstractHandler::class, $handler);
     }
 
-    public function test_handle_with_empty_message(): void
+    public function testHandleWithEmptyMessage(): void
     {
         $handler = new ConsoleLogger($this->output);
         $record = new LogRecord(
@@ -249,7 +249,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function test_handle_with_special_characters(): void
+    public function testHandleWithSpecialCharacters(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->info('Special: @#$%^&*()');
@@ -258,7 +258,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Special:', $content);
     }
 
-    public function test_handle_with_unicode(): void
+    public function testHandleWithUnicode(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $logger->info('Café résumé naïve 🎉');
@@ -267,7 +267,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Café', $content);
     }
 
-    public function test_handler_batch_handle(): void
+    public function testHandlerBatchHandle(): void
     {
         $handler = new ConsoleLogger($this->output);
         $records = [];
@@ -285,14 +285,14 @@ class ConsoleLoggerTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_close_handler(): void
+    public function testCloseHandler(): void
     {
         $handler = new ConsoleLogger($this->output);
         $result = $handler->close();
         $this->assertNull($result);
     }
 
-    public function test_push_handler(): void
+    public function testPushHandler(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $handler = new ConsoleLogger($this->output);
@@ -300,14 +300,14 @@ class ConsoleLoggerTest extends TestCase
         $this->assertCount(2, $logger->getHandlers());
     }
 
-    public function test_pop_handler(): void
+    public function testPopHandler(): void
     {
         $logger = ConsoleLogger::create($this->output);
         $handler = $logger->popHandler();
         $this->assertInstanceOf(ConsoleLogger::class, $handler);
     }
 
-    public function test_level_filtering_info_at_normal(): void
+    public function testLevelFilteringInfoAtNormal(): void
     {
         $output = new BufferedOutput();
         $handler = new ConsoleLogger($output, Level::Info);
@@ -333,7 +333,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertStringContainsString('Info should pass', $content);
     }
 
-    public function test_level_filtering_debug_at_debug_level(): void
+    public function testLevelFilteringDebugAtDebugLevel(): void
     {
         $output = new BufferedOutput(OutputInterface::VERBOSITY_VERBOSE);
         $handler = new ConsoleLogger($output, Level::Debug);

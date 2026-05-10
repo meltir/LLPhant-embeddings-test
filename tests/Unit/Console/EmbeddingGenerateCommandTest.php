@@ -68,12 +68,6 @@ class EmbeddingGenerateCommandTest extends TestCase
         $this->assertTrue($definition->hasOption('word-overlap'));
     }
 
-    public function testCommandHasEmbeddingGeneratorOption(): void
-    {
-        $definition = $this->command->getDefinition();
-        $this->assertTrue($definition->hasOption('embedding-generator'));
-    }
-
     public function testCommandTextDirDefault(): void
     {
         $definition = $this->command->getDefinition();
@@ -102,11 +96,17 @@ class EmbeddingGenerateCommandTest extends TestCase
         $this->assertEquals('10', $option->getDefault());
     }
 
-  public function testCommandEmbeddingGeneratorDefault(): void
+    public function testCommandHasResetDbOption(): void
     {
         $definition = $this->command->getDefinition();
-        $option = $definition->getOption('embedding-generator');
-        $this->assertStringContainsString('EmbeddingGemmaEmbeddingGenerator', $option->getDefault());
+        $this->assertTrue($definition->hasOption('reset-db'));
+    }
+
+    public function testCommandResetDbOptionIsValueNone(): void
+    {
+        $definition = $this->command->getDefinition();
+        $option = $definition->getOption('reset-db');
+        $this->assertFalse($option->isArray());
     }
 
     public function testCommandHelp(): void
@@ -123,7 +123,7 @@ class EmbeddingGenerateCommandTest extends TestCase
         $this->assertNotNull($definition->getOption('max-length'));
         $this->assertNotNull($definition->getOption('separator'));
         $this->assertNotNull($definition->getOption('word-overlap'));
-        $this->assertNotNull($definition->getOption('embedding-generator'));
+        $this->assertNotNull($definition->getOption('reset-db'));
     }
 
     public function testCommandListOptions(): void
@@ -173,7 +173,6 @@ class EmbeddingGenerateCommandTest extends TestCase
                 '--max-length' => '150',
                 '--separator' => ',',
                 '--word-overlap' => '5',
-                '--embedding-generator' => \App\EmbeddingGemma\EmbeddingGemmaEmbeddingGenerator::class,
             ]);
         } catch (\Exception $e) {
             // Expected to fail without DB
@@ -181,5 +180,44 @@ class EmbeddingGenerateCommandTest extends TestCase
 
         $output = $this->tester->getDisplay();
         $this->assertStringContainsString('Sherlock Holmes Embedding Generator', $output);
+    }
+
+    public function testCommandWithResetDb(): void
+    {
+        try {
+            $this->tester->execute([
+                '--reset-db' => true,
+            ]);
+        } catch (\Exception $e) {
+            // Expected to fail without DB
+        }
+
+        $output = $this->tester->getDisplay();
+        $this->assertStringContainsString('Sherlock Holmes Embedding Generator', $output);
+    }
+
+    public function testDetectEmbeddingLengthReturnsCorrectLength(): void
+    {
+        $vector = [];
+        for ($i = 0; $i < 768; $i++) {
+            $vector[] = round(sin($i * 0.01) * 0.5, 6);
+        }
+        $fake = new \OpenAI\Testing\ClientFake([
+            \OpenAI\Responses\Embeddings\CreateResponse::fake([
+                'data' => [['embedding' => $vector]],
+            ]),
+        ]);
+        $config = new \LLPhant\OpenAIConfig();
+        $config->client = $fake;
+
+        $reflection = new \ReflectionClass($this->command);
+        $method = $reflection->getMethod('detectEmbeddingLength');
+        $method->setAccessible(true);
+
+        $outputMock = $this->createStub(\Symfony\Component\Console\Output\OutputInterface::class);
+
+        $result = $method->invoke($this->command, $outputMock);
+
+        $this->assertEquals(768, $result);
     }
 }
