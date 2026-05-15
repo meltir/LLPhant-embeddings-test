@@ -28,7 +28,7 @@ class EmbeddingPipeline
 
     public function run(string $textDir, int $maxLength = 200, string $separator = '.', int $wordOverlap = 10): void
     {
-        $stats = new EmbeddingStats();
+      $stats = new EmbeddingStats();
 
         $documents = $this->documentReader->read($textDir);
         $this->output->writeln("Found <info>" . count($documents) . "</info> document(s).\n");
@@ -36,9 +36,12 @@ class EmbeddingPipeline
 
         $generator = $this->embeddingGenerator ?? new \App\EmbeddingGenerator\GenericEmbeddingGenerator();
 
-        $totalChunks = 0;
-        foreach ($documents as $doc) {
+         $totalChunks = 0;
+        $filePaths = [];
+        $textDirBasename = basename($textDir);
+        foreach ($documents as $i => $doc) {
             $title = $this->extractTitle($doc);
+            $filePaths[$i] = $textDirBasename . '/' . ($doc->sourceName ?? $title);
             $doc = $this->documentPreprocessor->preprocess($doc, $title);
             $splitDocs = $this->documentChunker->chunk($doc, $maxLength, $separator, $wordOverlap);
             $totalChunks += count($splitDocs);
@@ -47,26 +50,28 @@ class EmbeddingPipeline
         if ($totalChunks > 0) {
             $progressBar = new ProgressBar($this->output, $totalChunks);
             $progressBar->setFormat(
-                ' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %message:30s%'
+                ' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %message:50s%'
             );
             $progressBar->start();
 
             $currentDoc = 0;
-            foreach ($documents as $doc) {
+            foreach ($documents as $i => $doc) {
                 $currentDoc++;
                 $title = $this->extractTitle($doc);
-                $this->output->writeln("  Processing: <comment>{$title}</comment>");
                 $this->logger->debug('Processing document', ['title' => $title]);
+
+                $filePath = $filePaths[$i];
 
                 $doc = $this->documentPreprocessor->preprocess($doc, $title);
 
                 $splitDocs = $this->documentChunker->chunk($doc, $maxLength, $separator, $wordOverlap);
-                $this->output->writeln("    Created <info>" . count($splitDocs) . "</info> chunk(s)");
                 $this->logger->debug('Document chunked', ['title' => $title, 'chunks' => count($splitDocs)]);
+
+                $progressBar->setMessage("{$filePath}: " . count($splitDocs) . " chunks");
 
                 foreach ($splitDocs as $chunkDoc) {
                     $stats->total++;
-                    $progressBar->setMessage("{$title}: chunk {$chunkDoc->chunkNumber}");
+                    $progressBar->setMessage("{$filePath}: chunk {$chunkDoc->chunkNumber}");
 
                     if (
                         $this->chunkStorage->exists(
